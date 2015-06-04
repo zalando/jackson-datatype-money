@@ -1,5 +1,9 @@
 # Jackson Datatype Money
 
+[Jackson](http://jackson.codehaus.org) module (jar)
+to support JSON serialization and deserialization of
+[javax.money](https://github.com/JavaMoney/jsr354-api) data types.
+
 [![Build Status](https://img.shields.io/travis/zalando/jackson-datataype-money.svg)](https://travis-ci.org/zalando/jackson-datataype-money)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datataype-money.svg)](https://coveralls.io/r/zalando/jackson-datataype-money)
 [![Release](https://img.shields.io/github/release/zalando/jackson-datataype-money.svg)](https://github.com/zalando/jackson-datataype-money/releases)
@@ -17,6 +21,12 @@
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new MoneyModule());
+    
+The module supports de/serialization of the following types
+
+ - [java.util.Currency](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html) ↔ [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
+ - javax.money.CurrencyUnit ↔ [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
+ - javax.money.MonetaryAmount ↔ `{"amount": 29.95, "currency": "EUR"}`
 
 ## License
 
