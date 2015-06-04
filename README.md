@@ -4,9 +4,9 @@
 to support JSON serialization and deserialization of
 [javax.money](https://github.com/JavaMoney/jsr354-api) data types.
 
-[![Build Status](https://img.shields.io/travis/zalando/jackson-datataype-money.svg)](https://travis-ci.org/zalando/jackson-datataype-money)
-[![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datataype-money.svg)](https://coveralls.io/r/zalando/jackson-datataype-money)
-[![Release](https://img.shields.io/github/release/zalando/jackson-datataype-money.svg)](https://github.com/zalando/jackson-datataype-money/releases)
+[![Build Status](https://img.shields.io/travis/zalando/jackson-datatype-money.svg)](https://travis-ci.org/zalando/jackson-datatype-money)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datatype-money.svg)](https://coveralls.io/r/zalando/jackson-datatype-money)
+[![Release](https://img.shields.io/github/release/zalando/jackson-datatype-money.svg)](https://github.com/zalando/jackson-datatype-money/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/jackson-datatype-money.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/jackson-datatype-money)
 
 ## Dependency
@@ -14,7 +14,7 @@ to support JSON serialization and deserialization of
     <dependency>
         <groupId>org.zalando</groupId>
         <artifactId>jackson-datatype-money</artifactId>
-        <version>${jackson-datatype-money.versions}</version>
+        <version>${jackson-datatype-money.version}</version>
     </dependency>
 
 ## Usage
