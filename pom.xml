@@ -10,7 +10,7 @@
 
     <groupId>org.zalando</groupId>
     <artifactId>jackson-datatype-money</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
 
     <name>Jackson-datatype-Money</name>
     <description>Extension module to properly support datatypes of javax.money.</description>
