@@ -4,14 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <prerequisites>
+        <maven>3.0.4</maven>
+    </prerequisites>
+
     <groupId>org.zalando</groupId>
     <artifactId>jackson-datatype-money</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
+
+    <name>Jackson-datatype-Money</name>
+    <description>Extension module to properly support datatypes of javax.money.</description>
+    <url>https://github.com/zalando/jackson-datatype-money</url>
 
     <organization>
         <name>Zalando SE</name>
     </organization>
-    
+
     <inceptionYear>2015</inceptionYear>
 
     <licenses>
@@ -22,9 +30,39 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Jan Matusewitcz</name>
+            <email>jan.matusewicz@zalando.de</email>
+            <organization>Zalando SE</organization>
+            <organizationUrl>https://tech.zalando.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Lukas Niemeier</name>
+            <email>lukas.niemeier@zalando.de</email>
+            <organization>Zalando SE</organization>
+            <organizationUrl>https://tech.zalando.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Willi Schönborn</name>
+            <email>willi.schoenborn@zalando.de</email>
+            <organization>Zalando SE</organization>
+            <organizationUrl>https://tech.zalando.com/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/zalando/jackson-datatype-money</url>
+        <connection>scm:git:git@github.com:zalando/jackson-datatype-money.git</connection>
+        <developerConnection>scm:git:git@github.com:zalando/jackson-datatype-money.git</developerConnection>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson.version>2.5.3</jackson.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <spring.version>4.1.6.RELEASE</spring.version>
+        <jackson.version>2.6.0-rc2</jackson.version>
     </properties>
 
     <dependencies>
@@ -47,6 +85,7 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-parameter-names</artifactId>
             <version>${jackson.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -67,7 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>2.7</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -86,38 +125,37 @@
                     <processStartTag>&#8291;&#8203;</processStartTag>
                     <processEndTag>&#8203;&#8291;</processEndTag>
                     <sectionDelimiter>&#8291;&#8291;</sectionDelimiter>
+                    <excludes>
+                        <exclude>**/*.json</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.3</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
                     <compilerArgs>
                         <compilerArg>-Xlint:unchecked</compilerArg>
+                        <compilerArg>-Werror</compilerArg>
                         <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
                 <configuration>
-                    <archive>                   
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                    </archive>
+                    <parallel>classesAndMethods</parallel>
+                    <threadCount>1</threadCount>
+                    <perCoreThreadCount>true</perCoreThreadCount>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.2.201409121644</version>
+                <version>0.7.5.201505241946</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -125,14 +163,133 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>1.0</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>1.0</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.9.4</version>
+                <configuration>
+                    <pushChanges>false</pushChanges>
+                    <tag>${project.version}</tag>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.5</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
