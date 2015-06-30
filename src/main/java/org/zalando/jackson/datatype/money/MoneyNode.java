@@ -22,10 +22,12 @@ package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.money.CurrencyUnit;
 import java.math.BigDecimal;
 
+@JsonPropertyOrder({"amount", "currency"})
 final class MoneyNode {
 
     @JsonProperty
