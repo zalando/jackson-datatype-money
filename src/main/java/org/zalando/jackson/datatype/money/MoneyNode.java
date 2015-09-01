@@ -20,34 +20,35 @@ package org.zalando.jackson.datatype.money;
  * ​⁣
  */
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import javax.money.CurrencyUnit;
 import java.math.BigDecimal;
 
-@JsonPropertyOrder({"amount", "currency"})
+import javax.money.CurrencyUnit;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 final class MoneyNode {
 
-    @JsonProperty
     private final BigDecimal amount;
-    
-    @JsonProperty
+
     private final CurrencyUnit currency;
 
     @JsonCreator
-    MoneyNode(BigDecimal amount, CurrencyUnit currency) {
+    MoneyNode(@JsonProperty("amount") final BigDecimal amount,
+            @JsonProperty("currency") final CurrencyUnit currency) {
         this.amount = amount;
         this.currency = currency;
     }
 
+    @JsonGetter("amount")
     BigDecimal getAmount() {
         return amount;
     }
 
+    @JsonGetter("currency")
     CurrencyUnit getCurrency() {
         return currency;
     }
-    
+
 }

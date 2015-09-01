@@ -20,15 +20,19 @@ package org.zalando.jackson.datatype.money;
  * ​⁣
  */
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import static org.hamcrest.Matchers.comparesEqualTo;
 
-import javax.money.MonetaryAmount;
+import static org.junit.Assert.assertThat;
+
 import java.io.IOException;
+
 import java.math.BigDecimal;
 
-import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.junit.Assert.assertThat;
+import javax.money.MonetaryAmount;
+
+import org.junit.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class MonetaryAmountDeserializerTest {
 
@@ -41,8 +45,17 @@ public final class MonetaryAmountDeserializerTest {
 
         final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
         final BigDecimal expected = new BigDecimal("29.95");
-        
+
         assertThat(actual, comparesEqualTo(expected));
     }
-    
+
+    @Test
+    public void shouldDeserializeWhenPropertiesAreInDifferentOrder() throws IOException {
+        final String content = "{\"currency\":\"EUR\",\"amount\":29.95}";
+        final MonetaryAmount amount = mapper.readValue(content, MonetaryAmount.class);
+
+        final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
+        assertThat(actual, comparesEqualTo(new BigDecimal("29.95")));
+    }
+
 }
