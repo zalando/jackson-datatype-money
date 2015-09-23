@@ -59,23 +59,41 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <java-money.version>1.0</java-money.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <jackson.version>2.6.1</jackson.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- Java 7 -->
+            <dependency>
+                <groupId>javax.money</groupId>
+                <artifactId>money-api-bp</artifactId>
+                <version>${java-money.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javamoney</groupId>
+                <artifactId>moneta-bp</artifactId>
+                <version>${java-money.version}</version>
+            </dependency>
+            <!-- Java 8 -->
+            <dependency>
+                <groupId>javax.money</groupId>
+                <artifactId>money-api</artifactId>
+                <version>${java-money.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javamoney</groupId>
+                <artifactId>moneta</artifactId>
+                <version>${java-money.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <dependency>
-            <groupId>javax.money</groupId>
-            <artifactId>money-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.javamoney</groupId>
-            <artifactId>moneta</artifactId>
-            <version>1.0</version>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -132,7 +150,6 @@
                     <compilerArgs>
                         <compilerArg>-Xlint:unchecked</compilerArg>
                         <compilerArg>-Werror</compilerArg>
-                        <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
                 </configuration>
             </plugin>
@@ -283,6 +300,39 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>jdk7</id>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.money</groupId>
+                    <artifactId>money-api-bp</artifactId>
+                    <optional>false</optional>
+                </dependency>
+                <dependency>
+                    <groupId>org.javamoney</groupId>
+                    <artifactId>moneta-bp</artifactId>
+                    <optional>false</optional>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.money</groupId>
+                    <artifactId>money-api</artifactId>
+                    <optional>false</optional>
+                </dependency>
+                <dependency>
+                    <groupId>org.javamoney</groupId>
+                    <artifactId>moneta</artifactId>
+                    <optional>false</optional>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
