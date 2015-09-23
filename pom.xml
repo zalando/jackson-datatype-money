@@ -307,12 +307,10 @@
                 <dependency>
                     <groupId>javax.money</groupId>
                     <artifactId>money-api-bp</artifactId>
-                    <optional>false</optional>
                 </dependency>
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta-bp</artifactId>
-                    <optional>false</optional>
                 </dependency>
             </dependencies>
         </profile>
@@ -325,12 +323,10 @@
                 <dependency>
                     <groupId>javax.money</groupId>
                     <artifactId>money-api</artifactId>
-                    <optional>false</optional>
                 </dependency>
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta</artifactId>
-                    <optional>false</optional>
                 </dependency>
             </dependencies>
         </profile>
