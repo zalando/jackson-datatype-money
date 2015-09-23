@@ -9,7 +9,7 @@ script:
   - mvn clean verify -P jdk8
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report
+  - mvn clean test jacoco:report coveralls:report -P jdk8
 
 notifications:
   email:
