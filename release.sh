@@ -4,6 +4,10 @@ set -e
 
 mvn scm:check-local-modification
 
+# test
+mvn clean test -P jdk7
+mvn clean test -P jdk8
+
 # release
 mvn versions:set
 git add pom.xml

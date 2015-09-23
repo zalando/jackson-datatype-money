@@ -291,6 +291,9 @@
         </profile>
         <profile>
             <id>jdk8</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <dependencies>
                 <dependency>
                     <groupId>javax.money</groupId>
