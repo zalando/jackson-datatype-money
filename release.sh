@@ -12,7 +12,7 @@ mvn clean test -P jdk8
 mvn versions:set
 git add pom.xml
 git commit
-mvn clean deploy -P release
+mvn clean deploy -P release,jdk8
 mvn scm:tag
 
 # next development version
