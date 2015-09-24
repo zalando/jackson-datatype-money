@@ -26,11 +26,29 @@ to support JSON serialization and deserialization of
     mapper.registerModule(new MoneyModule());
 ```
     
-The module supports de/serialization of the following types
+The module supports de/serialization of the following types:
 
- - [java.util.Currency](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html) ↔ [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
- - javax.money.CurrencyUnit ↔ [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
- - javax.money.MonetaryAmount ↔ `{"amount": 29.95, "currency": "EUR"}`
+### [`java.util.Currency`](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html)
+[ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
+
+### [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)
+[ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
+
+```json
+```
+
+### [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java)
+
+```
+Money.of(29.95, "EUR");
+```
+
+```json
+{
+  "amount": 29.95, 
+  "currency": "EUR"
+}
+```
 
 ## License
 
