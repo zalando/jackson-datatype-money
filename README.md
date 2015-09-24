@@ -19,6 +19,38 @@ to support JSON serialization and deserialization of
 </dependency>
 ```
 
+This module has no direct dependency on Java Money, but rather requires that clients pick one in their project directly. This allows this module to be compatible with the official version as well as the backport of Java Money. Pick one of the following dependency sets:
+
+### Java 7
+
+```xml
+<dependency>
+    <groupId>javax.money</groupId>
+    <artifactId>money-api-bp</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.javamoney</groupId>
+    <artifactId>moneta-bp</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+```
+
+### Java 8
+
+```xml
+<dependency>
+    <groupId>javax.money</groupId>
+    <artifactId>money-api</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.javamoney</groupId>
+    <artifactId>moneta</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+```
+
 ## Usage
 
 ```java
