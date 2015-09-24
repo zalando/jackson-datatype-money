@@ -11,22 +11,80 @@ to support JSON serialization and deserialization of
 
 ## Dependency
 
-    <dependency>
-        <groupId>org.zalando</groupId>
-        <artifactId>jackson-datatype-money</artifactId>
-        <version>${jackson-datatype-money.version}</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>org.zalando</groupId>
+    <artifactId>jackson-datatype-money</artifactId>
+    <version>${jackson-datatype-money.version}</version>
+</dependency>
+```
+
+This module has no direct dependency on Java Money, but rather requires that clients pick one in their project directly. This allows this module to be compatible with the official version as well as the backport of Java Money. Pick one of the following dependency sets:
+
+### Java 7
+
+```xml
+<dependency>
+    <groupId>javax.money</groupId>
+    <artifactId>money-api-bp</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.javamoney</groupId>
+    <artifactId>moneta-bp</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+```
+
+### Java 8
+
+```xml
+<dependency>
+    <groupId>javax.money</groupId>
+    <artifactId>money-api</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.javamoney</groupId>
+    <artifactId>moneta</artifactId>
+    <version>${java-money.version}</version>
+</dependency>
+```
 
 ## Usage
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new MoneyModule());
-    
-The module supports de/serialization of the following types
+```java
+ObjectMapper mapper = new ObjectMapper();
+mapper.registerModule(new MoneyModule());
+```
 
- - [java.util.Currency](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html) ↔ [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
- - javax.money.CurrencyUnit ↔ [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
- - javax.money.MonetaryAmount ↔ `{"amount": 29.95, "currency": "EUR"}`
+Or alternatively you can use the SPI capabilities:
+
+```java
+ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+```
+
+## Supported Types
+The module supports de/serialization of the following types:
+
+### [`java.util.Currency`](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html)
+
+`Currency.getInstance("EUR")` produces an [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, e.g. `"EUR"`.
+
+### [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)
+
+`Monetary.getCurrency("EUR")` produces an [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, e.g. `"EUR"`.
+
+### [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java)
+
+`Money.of(29.95, "EUR")` produces the following structure:
+
+```json
+{
+  "amount": 29.95, 
+  "currency": "EUR"
+}
+```
 
 ## License
 
