@@ -12,36 +12,40 @@ to support JSON serialization and deserialization of
 ## Dependency
 
 ```xml
-    <dependency>
-        <groupId>org.zalando</groupId>
-        <artifactId>jackson-datatype-money</artifactId>
-        <version>${jackson-datatype-money.version}</version>
-    </dependency>
+<dependency>
+    <groupId>org.zalando</groupId>
+    <artifactId>jackson-datatype-money</artifactId>
+    <version>${jackson-datatype-money.version}</version>
+</dependency>
 ```
 
 ## Usage
 
 ```java
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new MoneyModule());
+ObjectMapper mapper = new ObjectMapper();
+mapper.registerModule(new MoneyModule());
 ```
-    
+
+Or alternatively you can use the SPI capabilities:
+
+```java
+ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+```
+
+## Supported Types
 The module supports de/serialization of the following types:
 
 ### [`java.util.Currency`](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html)
-[ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
+
+`Currency.getInstance("EUR")` produces an [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, e.g. `"EUR"`.
 
 ### [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)
-[ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
 
-```json
-```
+`Monetary.getCurrency("EUR")` produces an [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, e.g. `"EUR"`.
 
 ### [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java)
 
-```
-Money.of(29.95, "EUR");
-```
+`Money.of(29.95, "EUR")` produces the following structure:
 
 ```json
 {
