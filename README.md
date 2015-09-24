@@ -11,16 +11,20 @@ to support JSON serialization and deserialization of
 
 ## Dependency
 
+```xml
     <dependency>
         <groupId>org.zalando</groupId>
         <artifactId>jackson-datatype-money</artifactId>
         <version>${jackson-datatype-money.version}</version>
     </dependency>
+```
 
 ## Usage
 
+```java
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new MoneyModule());
+```
     
 The module supports de/serialization of the following types
 
