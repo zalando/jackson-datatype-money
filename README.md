@@ -53,15 +53,27 @@ This module has no direct dependency on Java Money, but rather requires that cli
 
 ## Usage
 
+If you want to work with `org.javamoney.moneta.Money` as the implementation of `javax.money.MonetaryAmount` use the MoneyModul:
+
 ```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.registerModule(new MoneyModule());
 ```
 
-Or alternatively you can use the SPI capabilities:
+If you want to work with `org.javamoney.moneta.FastMoney` as the implementation of `javax.money.MonetaryAmount` use the FastMoneyModul:
 
 ```java
-ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+ObjectMapper mapper = new ObjectMapper();
+mapper.registerModule(new FastMoneyModule());
+```
+
+If you are using spring boot just register a Bean
+
+```java
+@Bean
+public Module moneyModule() {
+    return new MoneyModule();
+}
 ```
 
 ## Supported Types
