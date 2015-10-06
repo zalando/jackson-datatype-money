@@ -20,20 +20,33 @@ package org.zalando.jackson.datatype.money;
  * ​⁣
  */
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.javamoney.moneta.FastMoney;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.money.MonetaryAmount;
-import java.io.IOException;
+import javax.money.CurrencyUnit;
 
-public final class MonetaryAmountFastMoneyDeserializer extends JsonDeserializer<MonetaryAmount> {
+final class FastMoneyNode {
 
-    @Override
-    public MonetaryAmount deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-        final FastMoneyNode node = parser.readValueAs(FastMoneyNode.class);
-        return FastMoney.of(node.getAmount(), node.getCurrency());
+    private final Double amount;
+
+    private final CurrencyUnit currency;
+
+    @JsonCreator
+    FastMoneyNode(@JsonProperty("amount") final Double amount,
+                  @JsonProperty("currency") final CurrencyUnit currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    @JsonGetter("amount")
+    Double getAmount() {
+        return amount;
+    }
+
+    @JsonGetter("currency")
+    CurrencyUnit getCurrency() {
+        return currency;
     }
 
 }

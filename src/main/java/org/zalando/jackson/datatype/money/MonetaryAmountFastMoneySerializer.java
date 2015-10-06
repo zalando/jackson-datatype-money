@@ -35,10 +35,10 @@ public final class MonetaryAmountFastMoneySerializer extends JsonSerializer<Mone
     public void serialize(MonetaryAmount value, JsonGenerator generator, SerializerProvider provider)
             throws IOException {
 
-        final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
+        final Double amount = value.getNumber().numberValueExact(Double.class);
         final CurrencyUnit currency = value.getCurrency();
 
-        generator.writeObject(new MoneyNode(amount, currency));
+        generator.writeObject(new FastMoneyNode(amount, currency));
     }
 
 }
