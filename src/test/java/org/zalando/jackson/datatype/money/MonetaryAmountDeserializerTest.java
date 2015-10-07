@@ -20,28 +20,40 @@ package org.zalando.jackson.datatype.money;
  * ​⁣
  */
 
-import static org.hamcrest.Matchers.comparesEqualTo;
-
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-
-import java.math.BigDecimal;
-
-import javax.money.MonetaryAmount;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.javamoney.moneta.FastMoney;
+import org.javamoney.moneta.Money;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.money.CurrencyUnit;
+import javax.money.MonetaryAmount;
+import java.io.IOException;
+import java.math.BigDecimal;
+
+import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public final class MonetaryAmountDeserializerTest {
 
-    private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+    @Test
+    public void shouldDeserializeMoneyByDefault() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
+
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        assertThat(amount, is(instanceOf(Money.class)));
+    }
 
     @Test
-    public void shouldDeserialize() throws IOException {
+    public void shouldDeserializeMoneyCorrectly() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
+
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
-        final MonetaryAmount amount = mapper.readValue(content, MonetaryAmount.class);
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
 
         final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
         final BigDecimal expected = new BigDecimal("29.95");
@@ -50,12 +62,49 @@ public final class MonetaryAmountDeserializerTest {
     }
 
     @Test
-    public void shouldDeserializeWhenPropertiesAreInDifferentOrder() throws IOException {
+    public void shouldDeserializeFastMoney() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new FastMoneyFactory()));
+
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        assertThat(amount, is(instanceOf(FastMoney.class)));
+    }
+
+    @Test
+    public void shouldDeserializeFastMoneyCorrectly() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new FastMoneyFactory()));
+
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
+        final BigDecimal expected = new BigDecimal("29.95");
+
+        assertThat(actual, comparesEqualTo(expected));
+    }
+
+    @Test
+    public void shouldDeserializeCorrectlyWhenPropertiesAreInDifferentOrder() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
+
         final String content = "{\"currency\":\"EUR\",\"amount\":29.95}";
-        final MonetaryAmount amount = mapper.readValue(content, MonetaryAmount.class);
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
 
         final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
         assertThat(actual, comparesEqualTo(new BigDecimal("29.95")));
+    }
+
+    @Test
+    public void defaultConstructorShouldFallbackToMoney() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().registerModule(new SimpleModule()
+                .addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer())
+                .addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer()));
+
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        assertThat(amount, is(instanceOf(Money.class)));
     }
 
 }

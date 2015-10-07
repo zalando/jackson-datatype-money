@@ -54,14 +54,29 @@ This module has no direct dependency on Java Money, but rather requires that cli
 ## Usage
 
 ```java
-ObjectMapper mapper = new ObjectMapper();
-mapper.registerModule(new MoneyModule());
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule());
 ```
 
 Or alternatively you can use the SPI capabilities:
 
 ```java
 ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+```
+
+By default the `MoneyModule` will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` when deserializing money values. If you need a different implementation you can pass in an implementation of `MonetaryAmountFactory` to the `MoneyModule`:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule(new FastMoneyFactory()));
+```
+(This will use `org.javamoney.moneta.FastMoney` instead of `org.javamoney.moneta.Money`.)
+
+In case you're using Java 8, you can also just pass in a method reference:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule(FastMoney::of));
 ```
 
 ## Supported Types

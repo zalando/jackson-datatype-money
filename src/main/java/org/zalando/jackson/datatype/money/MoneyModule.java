@@ -31,6 +31,10 @@ import static com.fasterxml.jackson.core.util.VersionUtil.mavenVersionFor;
 public final class MoneyModule extends SimpleModule {
 
     public MoneyModule() {
+        this(new MoneyFactory());
+    }
+
+    public MoneyModule(final MonetaryAmountFactory factory) {
         super(MoneyModule.class.getSimpleName(),
                 mavenVersionFor(MoneyModule.class.getClassLoader(), "org.zalando", "jackson-datatype-money"));
         
@@ -40,7 +44,7 @@ public final class MoneyModule extends SimpleModule {
         
         addDeserializer(Currency.class, new CurrencyDeserializer());
         addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer());
-        addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer());
+        addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer(factory));
     }
 
 }
