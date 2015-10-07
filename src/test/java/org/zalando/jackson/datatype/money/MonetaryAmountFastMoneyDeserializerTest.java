@@ -20,25 +20,21 @@ package org.zalando.jackson.datatype.money;
  * ​⁣
  */
 
-import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-
-import java.math.BigDecimal;
-
-import javax.money.MonetaryAmount;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.money.MonetaryAmount;
+import java.io.IOException;
+import java.math.BigDecimal;
 
-public final class MonetaryAmountDeserializerTest {
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
-    private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+public final class MonetaryAmountFastMoneyDeserializerTest {
+
+    private final ObjectMapper mapper = new ObjectMapper().registerModule(new FastMoneyModule());
 
     @Test
     public void shouldDeserialize() throws IOException {
@@ -49,7 +45,13 @@ public final class MonetaryAmountDeserializerTest {
         final BigDecimal expected = new BigDecimal("29.95");
 
         assertThat(actual, comparesEqualTo(expected));
-        assertThat(amount, is(instanceOf(Money.of(0.0,"CHF").getClass())));
+        assertThat(amount, is(instanceOf(FastMoney.of(0.0, "CHF").getClass())));
+    }
+
+    @Test (expected = ArithmeticException.class)
+    public void shouldNotDeserialize() throws IOException {
+        final String content = "{\"amount\":29.955555,\"currency\":\"EUR\"}";
+         mapper.readValue(content, MonetaryAmount.class);
     }
 
     @Test
@@ -59,7 +61,7 @@ public final class MonetaryAmountDeserializerTest {
 
         final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
         assertThat(actual, comparesEqualTo(new BigDecimal("29.95")));
-        assertThat(amount, is(instanceOf(Money.of(0.0,"CHF").getClass())));
+        assertThat(amount, is(instanceOf(FastMoney.of(0.0,"CHF").getClass())));
     }
 
 }
