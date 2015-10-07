@@ -31,7 +31,7 @@ import java.io.IOException;
 public final class MonetaryAmountDeserializer extends JsonDeserializer<MonetaryAmount> {
 
     @Override
-    public MonetaryAmount deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    public MonetaryAmount deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
         final MoneyNode node = parser.readValueAs(MoneyNode.class);
         return Money.of(node.getAmount(), node.getCurrency());
     }

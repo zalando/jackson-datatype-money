@@ -30,7 +30,7 @@ import java.util.Currency;
 public final class CurrencySerializer extends JsonSerializer<Currency> {
 
     @Override
-    public void serialize(Currency value, JsonGenerator generator, SerializerProvider serializers) throws IOException {
+    public void serialize(final Currency value, final JsonGenerator generator, final SerializerProvider serializers) throws IOException {
         generator.writeString(value.getCurrencyCode());
     }
     

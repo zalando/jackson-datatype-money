@@ -30,7 +30,7 @@ import java.util.Currency;
 public final class CurrencyDeserializer extends JsonDeserializer<Currency> {
 
     @Override
-    public Currency deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    public Currency deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
         final String currencyCode = parser.getValueAsString();
         return Currency.getInstance(currencyCode);
     }

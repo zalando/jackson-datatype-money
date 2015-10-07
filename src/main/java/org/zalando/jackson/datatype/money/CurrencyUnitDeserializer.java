@@ -31,7 +31,7 @@ import java.io.IOException;
 public final class CurrencyUnitDeserializer extends JsonDeserializer<CurrencyUnit> {
 
     @Override
-    public CurrencyUnit deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    public CurrencyUnit deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
         final String currencyCode = parser.getValueAsString();
         return CurrencyUnitBuilder.of(currencyCode, "default").build();
     }

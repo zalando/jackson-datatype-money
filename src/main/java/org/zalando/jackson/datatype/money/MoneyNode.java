@@ -20,13 +20,12 @@ package org.zalando.jackson.datatype.money;
  * ​⁣
  */
 
-import java.math.BigDecimal;
-
-import javax.money.CurrencyUnit;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.money.CurrencyUnit;
+import java.math.BigDecimal;
 
 final class MoneyNode {
 

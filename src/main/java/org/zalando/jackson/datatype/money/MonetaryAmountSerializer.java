@@ -32,7 +32,7 @@ import java.math.BigDecimal;
 public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
 
     @Override
-    public void serialize(MonetaryAmount value, JsonGenerator generator, SerializerProvider provider)
+    public void serialize(final MonetaryAmount value, final JsonGenerator generator, final SerializerProvider provider)
             throws IOException {
 
         final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
