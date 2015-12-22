@@ -23,21 +23,38 @@ package org.zalando.jackson.datatype.money;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javamoney.moneta.Money;
+import org.javamoney.moneta.format.CurrencyStyle;
 import org.junit.Test;
+
+import javax.money.format.AmountFormatQueryBuilder;
+import javax.money.format.MonetaryFormats;
+import java.util.Locale;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public final class MonetaryAmountSerializerTest {
 
-    private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
-
     @Test
-    public void shouldSerialize() throws JsonProcessingException {
-        final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+    public void shouldSerializeNoFormatter() throws JsonProcessingException {
+        final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+        final String expected = "{\"amount\":29.95,\"currency\":\"EUR\",\"formattedValue\":\"EUR29.95\"}";
         final String actual = mapper.writeValueAsString(Money.of(29.95, "EUR"));
 
         assertThat(actual, is(expected));
     }
+
+    @Test
+    public void shouldSerializeWithFormatter() throws JsonProcessingException {
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule( new MoneyModule( MonetaryFormats.getAmountFormat(
+            AmountFormatQueryBuilder.of( Locale.US ).set( CurrencyStyle.SYMBOL ).build()
+        )) );
+        final String expected = "{\"amount\":29.95,\"currency\":\"USD\",\"formattedValue\":\"$29.95\"}";
+        final String actual = mapper.writeValueAsString(Money.of(29.95, "USD"));
+
+        assertThat(actual, is(expected));
+    }
+
 
 }

@@ -26,10 +26,19 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
+import javax.money.format.MonetaryAmountFormat;
+import javax.money.format.MonetaryFormats;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
+
+    private MonetaryAmountFormat format;
+
+    public MonetaryAmountSerializer(MonetaryAmountFormat format) {
+        this.format = format;
+    }
 
     @Override
     public void serialize(final MonetaryAmount value, final JsonGenerator generator, final SerializerProvider provider)
@@ -37,8 +46,9 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
 
         final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
         final CurrencyUnit currency = value.getCurrency();
+        final String formattedValue = format.format( value );
 
-        generator.writeObject(new MoneyNode(amount, currency));
+        generator.writeObject(new MoneyNode(amount, currency, formattedValue));
     }
 
 }

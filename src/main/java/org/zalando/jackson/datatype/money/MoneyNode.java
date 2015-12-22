@@ -33,11 +33,15 @@ final class MoneyNode {
 
     private final CurrencyUnit currency;
 
+    private final String formattedValue;
+
     @JsonCreator
     MoneyNode(@JsonProperty("amount") final BigDecimal amount,
-            @JsonProperty("currency") final CurrencyUnit currency) {
+            @JsonProperty("currency") final CurrencyUnit currency,
+              @JsonProperty("formattedValue") final String formattedValue) {
         this.amount = amount;
         this.currency = currency;
+        this.formattedValue = formattedValue;
     }
 
     @JsonGetter("amount")
@@ -50,4 +54,6 @@ final class MoneyNode {
         return currency;
     }
 
+    @JsonGetter("formattedValue")
+    String getFormattedValue() { return formattedValue; }
 }
