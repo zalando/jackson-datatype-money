@@ -22,8 +22,10 @@ package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
+import javax.money.format.MonetaryAmountFormat;
 import java.util.Currency;
 
 import static com.fasterxml.jackson.core.util.VersionUtil.mavenVersionFor;
@@ -35,12 +37,20 @@ public final class MoneyModule extends SimpleModule {
     }
 
     public MoneyModule(final MonetaryAmountFactory factory) {
+        this(factory, null);
+    }
+    
+    public MoneyModule(@Nullable final MonetaryAmountFormat format) {
+        this(new MoneyFactory(), format);
+    }
+
+    public MoneyModule(final MonetaryAmountFactory factory, @Nullable final MonetaryAmountFormat format) {
         super(MoneyModule.class.getSimpleName(),
                 mavenVersionFor(MoneyModule.class.getClassLoader(), "org.zalando", "jackson-datatype-money"));
         
         addSerializer(Currency.class, new CurrencySerializer());
         addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
-        addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
+        addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(format));
         
         addDeserializer(Currency.class, new CurrencyDeserializer());
         addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer());
