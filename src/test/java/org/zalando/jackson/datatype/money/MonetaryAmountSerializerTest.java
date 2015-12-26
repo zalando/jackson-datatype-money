@@ -22,16 +22,13 @@ package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
-import javax.money.format.AmountFormatContext;
-import javax.money.format.MonetaryAmountFormat;
-import javax.money.format.MonetaryFormats;
-import javax.money.format.MonetaryParseException;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -63,34 +60,9 @@ public final class MonetaryAmountSerializerTest {
     }
     
     @Test
-    public void shouldSerializeWithoutFormattedValueIfFormatProducesNull() throws JsonProcessingException {
+    public void shouldSerializeWithoutFormattedValueIfFactoryProducesNull() throws JsonProcessingException {
         final ObjectMapper unit = new ObjectMapper()
-                .registerModule(new MoneyModule(new MonetaryAmountFormat() {
-                    @Override
-                    public AmountFormatContext getContext() {
-                        throw new UnsupportedOperationException();
-                    }
-
-                    @Override
-                    public String format(MonetaryAmount amount) {
-                        return null;
-                    }
-
-                    @Override
-                    public void print(Appendable appendable, MonetaryAmount amount) throws IOException {
-                        
-                    }
-
-                    @Override
-                    public MonetaryAmount parse(CharSequence text) throws MonetaryParseException {
-                        return null;
-                    }
-
-                    @Override
-                    public String queryFrom(MonetaryAmount amount) {
-                        return null;
-                    }
-                }));
+                .registerModule(new MoneyModule());
         
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(Money.of(29.95, "EUR"));
@@ -99,12 +71,27 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
-    public void shouldSerializeWithFormattedValue() throws JsonProcessingException {
+    public void shouldSerializeWithFormattedGermanValue() throws JsonProcessingException {
         final ObjectMapper unit = new ObjectMapper()
-                .registerModule(new MoneyModule(MonetaryFormats.getAmountFormat(Locale.GERMANY)));
+                .registerModule(new MoneyModule(new DefaultMonetaryAmountFormatFactory()));
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"29,95 EUR\"}";
-        final String actual = unit.writeValueAsString(Money.of(29.95, "EUR"));
+
+        final ObjectWriter writer = unit.writer().with(Locale.GERMANY);
+        final String actual = writer.writeValueAsString(Money.of(29.95, "EUR"));
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldSerializeWithFormattedAmericanValue() throws JsonProcessingException {
+        final ObjectMapper unit = new ObjectMapper()
+                .registerModule(new MoneyModule(new DefaultMonetaryAmountFormatFactory()));
+
+        final String expected = "{\"amount\":29.95,\"currency\":\"USD\",\"formatted\":\"USD29.95\"}";
+
+        final ObjectWriter writer = unit.writer().with(Locale.US);
+        final String actual = writer.writeValueAsString(Money.of(29.95, "USD"));
 
         assertThat(actual, is(expected));
     }

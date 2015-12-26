@@ -30,17 +30,18 @@ import javax.money.MonetaryAmount;
 import javax.money.format.MonetaryAmountFormat;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
 
-    private final MonetaryAmountFormat format;
+    private final MonetaryAmountFormatFactory factory;
 
     public MonetaryAmountSerializer() {
-        this(null);
+        this(new NoopMonetaryAmountFormatFactory());
     }
-    
-    public MonetaryAmountSerializer(@Nullable final MonetaryAmountFormat format) {
-        this.format = format;
+
+    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory) {
+        this.factory = factory;
     }
 
     @Override
@@ -49,9 +50,16 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
 
         final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
         final CurrencyUnit currency = value.getCurrency();
-        final String formatted = format == null ? null : format.format(value);
+        @Nullable final String formatted = format(value, provider);
 
         generator.writeObject(new MoneyNode(amount, currency, formatted));
+    }
+
+    @Nullable
+    private String format(final MonetaryAmount value, final SerializerProvider provider) {
+        final Locale locale = provider.getConfig().getLocale();
+        final MonetaryAmountFormat format = factory.create(locale);
+        return format == null ? null : format.format(value);
     }
 
 }
