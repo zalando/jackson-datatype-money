@@ -135,7 +135,7 @@ writer.writeValueAsString(Money.of(29.95 "EUR");
 }
 ```
 
-The following examples uses `en_US`:
+The following example uses `en_US`:
 
 ```java
 ObjectWriter writer = mapper.writer().with(Locale.US);
