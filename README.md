@@ -107,6 +107,49 @@ ObjectMapper mapper = new ObjectMapper()
 }
 ```
 
+## Formatting
+
+Formatting of monetary amounts is **disabled by default**. To enable it you have to pass in a `MonetaryAmountFormatFactory` implementation to the `MoneyModule`:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule(new DefaultMonetaryAmountFormatFactory()));
+```
+
+The `DefaultMonetaryAmountFormatFactory` delegates directly to `MonetaryFormats.getAmountFormat(Locale, String...)`.
+
+Formatting only affects the serialization and can be customized based on the *current* locale, as defined by the [`SerializationConfig`](http://wiki.fasterxml.com/SerializationConfig). This allows to implement RESTful API endpoints that format monetary amounts based on the `Accept-Language` header.
+
+The first example serializes a monetary amount using the `de_DE` locale:
+
+```java
+ObjectWriter writer = mapper.writer().with(Locale.GERMANY);
+writer.writeValueAsString(Money.of(29.95 "EUR");
+```
+
+```json
+{
+  "amount": 29.95, 
+  "currency": "EUR",
+  "formatted": "29,95 EUR"
+}
+```
+
+The following examples uses `en_US`:
+
+```java
+ObjectWriter writer = mapper.writer().with(Locale.US);
+writer.writeValueAsString(Money.of(29.95 "USD");
+```
+
+```json
+{
+  "amount": 29.95, 
+  "currency": "USD",
+  "formatted": "USD29.95"
+}
+```
+
 ## License
 
 Copyright [2015] Zalando SE
