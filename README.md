@@ -61,22 +61,8 @@ ObjectMapper mapper = new ObjectMapper()
 Or alternatively you can use the SPI capabilities:
 
 ```java
-ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
-```
-
-By default the `MoneyModule` will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` when deserializing money values. If you need a different implementation you can pass in an implementation of `MonetaryAmountFactory` to the `MoneyModule`:
-
-```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule(new FastMoneyFactory()));
-```
-(This will use `org.javamoney.moneta.FastMoney` instead of `org.javamoney.moneta.Money`.)
-
-In case you're using Java 8, you can also just pass in a method reference:
-
-```java
-ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule(FastMoney::of));
+    .findAndRegisterModules();
 ```
 
 ## Supported Types
@@ -91,6 +77,26 @@ The module supports de/serialization of the following types:
 `Monetary.getCurrency("EUR")` produces an [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, e.g. `"EUR"`.
 
 ### [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java)
+
+By default the `MoneyModule` will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` when deserializing money values. If you need a different implementation you can pass in an implementation of `MonetaryAmountFactory` to the `MoneyModule`:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule(new FastMoneyFactory()));
+```
+
+| `MonetaryAmount` Implementation     | Factory                                                                                                                         |
+|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| `org.javamoney.moneta.FastMoney`    | [`org.zalando.jackson.datatype.money.FastMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java) |
+| `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)         |
+| `org.javamoney.moneta.RoundedMoney` | n/a                                                                                                                             |
+
+In case you're using Java 8, you can also just pass in a method reference:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule(FastMoney::of));
+```
 
 `Money.of(29.95, "EUR")` produces the following structure:
 
