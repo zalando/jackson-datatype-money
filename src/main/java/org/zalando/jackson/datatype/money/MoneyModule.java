@@ -35,16 +35,24 @@ public final class MoneyModule extends SimpleModule {
     }
 
     public MoneyModule(final MonetaryAmountFactory factory) {
+        this(factory, new NoopMonetaryAmountFormatFactory());
+    }
+    
+    public MoneyModule(final MonetaryAmountFormatFactory factory) {
+        this(new MoneyFactory(), factory);
+    }
+
+    public MoneyModule(final MonetaryAmountFactory amountFactory, final MonetaryAmountFormatFactory formatFactory) {
         super(MoneyModule.class.getSimpleName(),
                 mavenVersionFor(MoneyModule.class.getClassLoader(), "org.zalando", "jackson-datatype-money"));
         
         addSerializer(Currency.class, new CurrencySerializer());
         addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
-        addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
+        addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(formatFactory));
         
         addDeserializer(Currency.class, new CurrencyDeserializer());
         addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer());
-        addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer(factory));
+        addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer(amountFactory));
     }
 
 }

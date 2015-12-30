@@ -34,6 +34,7 @@ import java.math.BigDecimal;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public final class MonetaryAmountDeserializerTest {
@@ -105,6 +106,16 @@ public final class MonetaryAmountDeserializerTest {
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
 
         assertThat(amount, is(instanceOf(Money.class)));
+    }
+    
+    @Test
+    public void shouldIgnoreFormattedValue() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
+        
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        assertThat(amount, is(notNullValue()));
     }
 
 }
