@@ -36,7 +36,7 @@ public final class RoundedMoneyFactory implements MonetaryAmountFactory {
         this(Monetary.getDefaultRounding());
     }
 
-    public RoundedMoneyFactory(MonetaryOperator rounding) {
+    public RoundedMoneyFactory(final MonetaryOperator rounding) {
         this.rounding = rounding;
     }
 
