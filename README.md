@@ -139,7 +139,7 @@ The following example uses `en_US`:
 
 ```java
 ObjectWriter writer = mapper.writer().with(Locale.US);
-writer.writeValueAsString(Money.of(29.95 "USD");
+writer.writeValueAsString(Money.of(29.95 "USD"));
 ```
 
 ```json
