@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
+import org.javamoney.moneta.RoundedMoney;
 import org.junit.Test;
 
 import javax.money.CurrencyUnit;
@@ -85,6 +86,29 @@ public final class MonetaryAmountDeserializerTest {
         assertThat(actual, comparesEqualTo(expected));
     }
 
+    @Test
+    public void shouldDeserializeRoundedMoney() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new RoundedMoneyFactory()));
+
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        assertThat(amount, is(instanceOf(RoundedMoney.class)));
+    }
+
+    @Test
+    public void shouldDeserializeRoundedMoneyCorrectly() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new RoundedMoneyFactory()));
+
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
+        final BigDecimal expected = new BigDecimal("29.95");
+
+        assertThat(actual, comparesEqualTo(expected));
+    }
+    
     @Test
     public void shouldDeserializeCorrectlyWhenPropertiesAreInDifferentOrder() throws IOException {
         final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();

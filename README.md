@@ -85,11 +85,11 @@ ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule(new FastMoneyFactory()));
 ```
 
-| `MonetaryAmount` Implementation     | Factory                                                                                                                         |
-|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| `org.javamoney.moneta.FastMoney`    | [`org.zalando.jackson.datatype.money.FastMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java) |
-| `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)         |
-| `org.javamoney.moneta.RoundedMoney` | n/a                                                                                                                             |
+| `MonetaryAmount` Implementation     | Factory                                                                                                                               |
+|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `org.javamoney.moneta.FastMoney`    | [`org.zalando.jackson.datatype.money.FastMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java)       |
+| `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
+| `org.javamoney.moneta.RoundedMoney` | [`org.zalando.jackson.datatype.money.RoundedMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
 
 In case you're using Java 8, you can also just pass in a method reference:
 
