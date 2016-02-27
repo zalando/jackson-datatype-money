@@ -2,7 +2,11 @@ language: java
 
 sudo: false
 
+before_install:
+  - export PROFILE=ri
+
 script:
+  - unset PROFILE
   - jdk_switcher use oraclejdk8
   - mvn clean verify -P ri
   - jdk_switcher use oraclejdk7

@@ -283,6 +283,12 @@
         <profile>
             <id>ri</id>
             <!-- reference implementation, java 8 -->
+            <activation>
+                <property>
+                    <name>env.PROFILE</name>
+                    <value>ri</value>
+                </property>
+            </activation>
             <dependencies>
                 <dependency>
                     <groupId>javax.money</groupId>
@@ -299,6 +305,12 @@
         <profile>
             <id>bp</id>
             <!-- backport, java 7 -->
+            <activation>
+                <property>
+                    <name>env.PROFILE</name>
+                    <value>bp</value>
+                </property>
+            </activation>
             <dependencies>
                 <dependency>
                     <groupId>javax.money</groupId>
