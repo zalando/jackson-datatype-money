@@ -13,6 +13,7 @@ script:
   - mvn clean verify -P bp
 
 after_success:
+  - jdk_switcher use oraclejdk8
   - mvn clean test jacoco:report coveralls:report -P ri
 
 notifications:
