@@ -281,22 +281,8 @@
             </build>
         </profile>
         <profile>
-            <id>jdk7</id>
-            <dependencies>
-                <dependency>
-                    <groupId>javax.money</groupId>
-                    <artifactId>money-api-bp</artifactId>
-                    <version>${java-money.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.javamoney</groupId>
-                    <artifactId>moneta-bp</artifactId>
-                    <version>${java-money.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>jdk8</id>
+            <id>ri</id>
+            <!-- reference implementation, java 8 -->
             <dependencies>
                 <dependency>
                     <groupId>javax.money</groupId>
@@ -306,6 +292,22 @@
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta</artifactId>
+                    <version>${java-money.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>bp</id>
+            <!-- backport, java 7 -->
+            <dependencies>
+                <dependency>
+                    <groupId>javax.money</groupId>
+                    <artifactId>money-api-bp</artifactId>
+                    <version>${java-money.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.javamoney</groupId>
+                    <artifactId>moneta-bp</artifactId>
                     <version>${java-money.version}</version>
                 </dependency>
             </dependencies>
