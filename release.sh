@@ -4,10 +4,9 @@ set -e
 
 mvn scm:check-local-modification
 
-# test using current jdk
-# for realistic tests the jdk has to be switched in addition to the profile
-# to avoid dependencies on rt.jar
-mvn clean test
+# test
+mvn dependency:tree clean test -Pjdk7,-jdk8
+mvn dependency:tree clean test -Pjdk8,-jdk7
 
 # release
 mvn versions:set
