@@ -11,7 +11,7 @@ Jackson Datatype Money is a [Jackson](https://github.com/codehaus/jackson) modul
 Jackson Datatype Money:
 -  enables you to express monetary amounts in JSON
 -  can be used in a REST API
--  offers customizable serialization by localelo
+-  offers customizable serialization by locale
 -  allows you to implement RESTful API endpoints that format monetary amounts based on the Accept-Language header 
 - can be used in a desktop application
 - is unique and flexible
