@@ -36,37 +36,7 @@ Run this module:
     <version>${jackson-datatype-money.version}</version>
 </dependency>
 ```
-For ultimate flexibility, this module is compatible with the official version as well as the backport of Java Money. It has no direct dependency on Java Money. Instead, it requires clients to directly pick one of the following dependency sets.
-
-**For Java 7**:
-
-```xml
-<dependency>
-    <groupId>javax.money</groupId>
-    <artifactId>money-api-bp</artifactId>
-    <version>${java-money.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.javamoney</groupId>
-    <artifactId>moneta-bp</artifactId>
-    <version>${java-money.version}</version>
-</dependency>
-```
-
-**For Java 8**:
-
-```xml
-<dependency>
-    <groupId>javax.money</groupId>
-    <artifactId>money-api</artifactId>
-    <version>${java-money.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.javamoney</groupId>
-    <artifactId>moneta</artifactId>
-    <version>${java-money.version}</version>
-</dependency>
-```
+For ultimate flexibility, this module is compatible with the official version as well as the backport of Java Money. The actual version will be selected by a profile based on the current JDK version.
 
 ## Using It
 
