@@ -2,14 +2,12 @@ language: java
 
 sudo: false
 
-script:
-  - jdk_switcher use oraclejdk7
-  - mvn clean verify -P jdk7
-  - jdk_switcher use oraclejdk8
-  - mvn clean verify -P jdk8
+jdk:
+  - oraclejdk8
+  - oraclejdk7
 
-after_success:
-  - mvn clean test jacoco:report coveralls:report
+script:
+  - mvn clean verify jacoco:report coveralls:report
 
 notifications:
   email:
