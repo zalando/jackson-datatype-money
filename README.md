@@ -139,8 +139,5 @@ writer.writeValueAsString(Money.of(29.95 "USD"));
 }
 ```
 
-## Contributing/TODO List
+## Contributing
 To contribute to Jackson Datatype Money, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. Please note that we aim to keep this project straightforward and focused. We are not looking to add lots of features; we just want it to keep doing what it does, as well and as powerfully as possible.
-
-Our current TODO list:
-- Make the library compatible with both the jdk8 and jdk7-backport versions of Java Money
