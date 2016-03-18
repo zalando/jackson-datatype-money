@@ -5,22 +5,20 @@
 [![Release](https://img.shields.io/github/release/zalando/jackson-datatype-money.svg)](https://github.com/zalando/jackson-datatype-money/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/jackson-datatype-money.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/jackson-datatype-money)
 
-Jackson Datatype Money is a [Jackson](https://github.com/codehaus/jackson) module (jar) to support JSON serialization and deserialization of [Java Money](https://github.com/JavaMoney/jsr354-api) data types. It fills a niche, in that it connects the Java Money and Jackson libraries so that they work seamlessly together, without requiring additional developer effort. In doing so, it aims to perform a small but repetitive task—once and for all.
+*Jackson Datatype Money* is a [Jackson](https://github.com/codehaus/jackson) module to support JSON serialization and deserialization of [Java Money](https://github.com/JavaMoney/jsr354-api) data types. It fills a niche, in that it connects the Java Money and Jackson libraries so that they work seamlessly together, without requiring additional developer effort. In doing so, it aims to perform a small but repetitive task — once and for all.
 
-## Features
-Jackson Datatype Money:
--  enables you to express monetary amounts in JSON
--  can be used in a REST API
--  offers customizable serialization by locale
--  allows you to implement RESTful API endpoints that format monetary amounts based on the Accept-Language header
-- is unique and flexible
-
-##Origins
 The maintainers of Jackson Datatype Money build APIs, so you might notice that this project reflects an API design point of view. In developing our work, we sought a reusable library that would enable us to express monetary amounts in JSON while reflecting our API preferences. We couldn't find one, so we created one. 
 
-#Getting Started
-##Requirements
-- Java 7 or 8
+## Features
+- enables you to express monetary amounts in JSON
+- can be used in a REST APIs
+- offers customizable serialization by locale
+- allows you to implement RESTful API endpoints that format monetary amounts based on the Accept-Language header
+- is unique and flexible
+
+# Getting Started
+## Requirements
+- Java 7 or higher
 - Any build tool using Maven Central, or direct download
 - Jackson
 - Java Money
