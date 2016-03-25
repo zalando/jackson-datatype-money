@@ -12,14 +12,7 @@ developer effort. In doing so, it aims to perform a small but repetitive task â€
 
 The maintainers of Jackson Datatype Money build APIs, so you might notice that this project reflects an API design
 point of view. In developing our work, we sought a reusable library that would enable us to express monetary amounts in
-JSON while reflecting our API preferences. We couldn't find one, so we created one.
-
-## Features
-- enables you to express monetary amounts in JSON
-- can be used in a REST APIs
-- offers customizable serialization by locale
-- allows you to implement RESTful API endpoints that format monetary amounts based on the Accept-Language header
-- is unique and flexible
+JSON while reflecting our API preferences, as shown in the following example. We couldn't find one, so we created one.
 
 ```json
 {
@@ -27,6 +20,13 @@ JSON while reflecting our API preferences. We couldn't find one, so we created o
   "currency": "EUR"
 }
 ```
+
+## Features
+- enables you to express monetary amounts in JSON
+- can be used in a REST APIs
+- offers customizable serialization by locale
+- allows you to implement RESTful API endpoints that format monetary amounts based on the Accept-Language header
+- is unique and flexible
 
 ## Dependencies
 - Java 7 or higher
