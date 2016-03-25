@@ -139,7 +139,8 @@ ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule(FastMoney::of));
 ```
 
-*Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from the Moneta: 
+*Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from Moneta, the reference
+implementation of Java Money: 
 
 | `MonetaryAmount` Implementation     | Factory                                                                                                                               |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
