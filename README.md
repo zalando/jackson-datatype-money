@@ -123,7 +123,7 @@ More sophisticated formatting rules can be supported by implementing `MonetaryAm
 
 ### Deserialization
 
-This module will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` when
+This module will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` by default when
 deserializing money values. If you need a different implementation, you can pass an implementation of
 `MonetaryAmountFactory` to the `MoneyModule`:
 
