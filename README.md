@@ -124,8 +124,8 @@ More sophisticated formatting rules can be supported by implementing `MonetaryAm
 ### Deserialization
 
 This module will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` by default when
-deserializing money values. If you need a different implementation, you can pass an implementation of
-`MonetaryAmountFactory` to the `MoneyModule`:
+deserializing money values. If you need a different implementation, you can pass a different `MonetaryAmountFactory`
+to the `MoneyModule`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
@@ -139,7 +139,7 @@ ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule(FastMoney::of));
 ```
 
-*Jackson Datatype Money* comes with the following factories: 
+*Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from the Moneta: 
 
 | `MonetaryAmount` Implementation     | Factory                                                                                                                               |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
