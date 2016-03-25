@@ -147,6 +147,20 @@ ObjectMapper mapper = new ObjectMapper()
 | `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
 | `org.javamoney.moneta.RoundedMoney` | [`org.zalando.jackson.datatype.money.RoundedMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
 
+## Usage
+
+After registering and configuring the module you're now free to directly use `MonetaryAmount` in your data types:
+
+```java
+import javax.money.MonetaryAmount;
+
+public class Product {
+    private String sku;
+    private MonetaryAmount price;
+    ...
+}
+```
+
 ## Getting help
 
 If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
