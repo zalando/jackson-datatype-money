@@ -10,7 +10,7 @@ script:
   - mvn clean verify
 
 after_success:
-  - coveralls:report
+  - mvn coveralls:report
 
 notifications:
   email:
