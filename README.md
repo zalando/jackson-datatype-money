@@ -5,9 +5,21 @@
 [![Release](https://img.shields.io/github/release/zalando/jackson-datatype-money.svg)](https://github.com/zalando/jackson-datatype-money/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/jackson-datatype-money.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/jackson-datatype-money)
 
-*Jackson Datatype Money* is a [Jackson](https://github.com/codehaus/jackson) module to support JSON serialization and deserialization of [Java Money](https://github.com/JavaMoney/jsr354-api) data types. It fills a niche, in that it connects the Java Money and Jackson libraries so that they work seamlessly together, without requiring additional developer effort. In doing so, it aims to perform a small but repetitive task — once and for all.
+*Jackson Datatype Money* is a [Jackson](https://github.com/codehaus/jackson) module to support JSON serialization and
+deserialization of [Java Money](https://github.com/JavaMoney/jsr354-api) data types. It fills a niche, in that it
+connects the Java Money and Jackson libraries so that they work seamlessly together, without requiring additional
+developer effort. In doing so, it aims to perform a small but repetitive task — once and for all.
 
-The maintainers of Jackson Datatype Money build APIs, so you might notice that this project reflects an API design point of view. In developing our work, we sought a reusable library that would enable us to express monetary amounts in JSON while reflecting our API preferences. We couldn't find one, so we created one. 
+The maintainers of Jackson Datatype Money build APIs, so you might notice that this project reflects an API design
+point of view. In developing our work, we sought a reusable library that would enable us to express monetary amounts in
+JSON while reflecting our API preferences, as shown in the following example. We couldn't find one, so we created one.
+
+```json
+{
+  "amount": 29.95, 
+  "currency": "EUR"
+}
+```
 
 ## Features
 - enables you to express monetary amounts in JSON
@@ -16,16 +28,15 @@ The maintainers of Jackson Datatype Money build APIs, so you might notice that t
 - allows you to implement RESTful API endpoints that format monetary amounts based on the Accept-Language header
 - is unique and flexible
 
-# Getting Started
-## Requirements
+## Dependencies
 - Java 7 or higher
 - Any build tool using Maven Central, or direct download
 - Jackson
 - Java Money
 
-## Dependencies
+## Installation
 
-Run this module:
+Add the following dependency to your project:
 
 ```xml
 <dependency>
@@ -36,7 +47,9 @@ Run this module:
 ```
 For ultimate flexibility, this module is compatible with the official version as well as the backport of Java Money. The actual version will be selected by a profile based on the current JDK version.
 
-## Using It
+## Configuration
+
+Register the module with your `ObjectMapper`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
@@ -50,53 +63,20 @@ ObjectMapper mapper = new ObjectMapper()
     .findAndRegisterModules();
 ```
 
-## Supported Types
-The module supports de/serialization of the following types:
+### Serialization
 
-**[`java.util.Currency`](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html)**
+For serialization this module currently supports the following data types:
 
-`Currency.getInstance("EUR")` produces an [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, e.g. `"EUR"`.
+| Input                                                                                                                             | Standard                                          | Output                                 |
+|-----------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------------------------------------|
+| [`java.util.Currency`](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html)                                         | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
+| [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)     | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
+| [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java) |                                                   | `{"amount": 99.95, "currency": "EUR"}` |
 
-**[`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)**
+### Formatting
 
-`Monetary.getCurrency("EUR")` produces an [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, e.g. `"EUR"`.
-
-**[`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java)**
-
-By default, the `MoneyModule` will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` when deserializing money values. If you need a different implementation, you can pass an implementation of `MonetaryAmountFactory` to the `MoneyModule`:
-
-```java
-ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule(new FastMoneyFactory()));
-```
-
-These implementations come with Java Money: 
-
-| `MonetaryAmount` Implementation     | Factory                                                                                                                               |
-|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `org.javamoney.moneta.FastMoney`    | [`org.zalando.jackson.datatype.money.FastMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java)       |
-| `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
-| `org.javamoney.moneta.RoundedMoney` | [`org.zalando.jackson.datatype.money.RoundedMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
-
-If you're using Java 8, you can also pass in a method reference:
-
-```java
-ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule(FastMoney::of));
-```
-
-`Money.of(29.95, "EUR")` produces the following structure:
-
-```json
-{
-  "amount": 29.95, 
-  "currency": "EUR"
-}
-```
-
-## Formatting
-
-Formatting of monetary amounts is **disabled by default**. To enable it, you have to pass in a `MonetaryAmountFormatFactory` implementation to the `MoneyModule`:
+A special feature for serializing monetary amounts is *formatting*, which is **disabled by default**. To enable it, you
+have to pass in a `MonetaryAmountFormatFactory` implementation to the `MoneyModule`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
@@ -105,7 +85,9 @@ ObjectMapper mapper = new ObjectMapper()
 
 The `DefaultMonetaryAmountFormatFactory` delegates directly to `MonetaryFormats.getAmountFormat(Locale, String...)`.
 
-Formatting only affects the serialization and can be customized based on the *current* locale, as defined by the [`SerializationConfig`](http://wiki.fasterxml.com/SerializationConfig). This allows to implement RESTful API endpoints that format monetary amounts based on the `Accept-Language` header.
+Formatting only affects the serialization and can be customized based on the *current* locale, as defined by the
+[`SerializationConfig`](http://wiki.fasterxml.com/SerializationConfig). This allows to implement RESTful API endpoints
+that format monetary amounts based on the `Accept-Language` header.
 
 The first example serializes a monetary amount using the `de_DE` locale:
 
@@ -137,5 +119,56 @@ writer.writeValueAsString(Money.of(29.95 "USD"));
 }
 ```
 
-## Contributing
-To contribute to Jackson Datatype Money, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. Please note that we aim to keep this project straightforward and focused. We are not looking to add lots of features; we just want it to keep doing what it does, as well and as powerfully as possible.
+More sophisticated formatting rules can be supported by implementing `MonetaryAmountFormatFactory` directly. 
+
+### Deserialization
+
+This module will use `org.javamoney.moneta.Money` as an implementation for `javax.money.MonetaryAmount` by default when
+deserializing money values. If you need a different implementation, you can pass a different `MonetaryAmountFactory`
+to the `MoneyModule`:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule(new FastMoneyFactory()));
+```
+
+If you're using Java 8, you can also pass in a method reference:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule(FastMoney::of));
+```
+
+*Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from Moneta, the reference
+implementation of Java Money: 
+
+| `MonetaryAmount` Implementation     | Factory                                                                                                                               |
+|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `org.javamoney.moneta.FastMoney`    | [`org.zalando.jackson.datatype.money.FastMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java)       |
+| `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
+| `org.javamoney.moneta.RoundedMoney` | [`org.zalando.jackson.datatype.money.RoundedMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
+
+## Usage
+
+After registering and configuring the module you're now free to directly use `MonetaryAmount` in your data types:
+
+```java
+import javax.money.MonetaryAmount;
+
+public class Product {
+    private String sku;
+    private MonetaryAmount price;
+    ...
+}
+```
+
+## Getting help
+
+If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
+
+## Getting involved
+
+To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. 
+Please note that we aim to keep this project straightforward and focused. We are not looking to add lots of features; 
+we just want it to keep doing what it does, as well and as powerfully as possible. For more details check the 
+[contribution guidelines](CONTRIBUTING.md).
