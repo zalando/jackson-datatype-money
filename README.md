@@ -6,8 +6,8 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/jackson-datatype-money.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/jackson-datatype-money)
 
 *Jackson Datatype Money* is a [Jackson](https://github.com/codehaus/jackson) module to support JSON serialization and
-deserialization of [Java Money](https://github.com/JavaMoney/jsr354-api) data types. It fills a niche, in that it
-connects the Java Money and Jackson libraries so that they work seamlessly together, without requiring additional
+deserialization of [JavaMoney](https://github.com/JavaMoney/jsr354-api) data types. It fills a niche, in that it
+connects the JavaMoney and Jackson libraries so that they work seamlessly together, without requiring additional
 developer effort. In doing so, it aims to perform a small but repetitive task — once and for all.
 
 The maintainers of Jackson Datatype Money build APIs, so you might notice that this project reflects an API design
@@ -32,7 +32,7 @@ JSON while reflecting our API preferences, as shown in the following example. We
 - Java 7 or higher
 - Any build tool using Maven Central, or direct download
 - Jackson
-- Java Money
+- JavaMoney
 
 ## Installation
 
@@ -45,7 +45,7 @@ Add the following dependency to your project:
     <version>${jackson-datatype-money.version}</version>
 </dependency>
 ```
-For ultimate flexibility, this module is compatible with the official version as well as the backport of Java Money. The actual version will be selected by a profile based on the current JDK version.
+For ultimate flexibility, this module is compatible with the official version as well as the backport of JavaMoney. The actual version will be selected by a profile based on the current JDK version.
 
 ## Configuration
 
@@ -140,7 +140,7 @@ ObjectMapper mapper = new ObjectMapper()
 ```
 
 *Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from Moneta, the reference
-implementation of Java Money: 
+implementation of JavaMoney: 
 
 | `MonetaryAmount` Implementation     | Factory                                                                                                                               |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
