@@ -23,9 +23,9 @@ package org.zalando.jackson.datatype.money;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.javamoney.moneta.CurrencyUnitBuilder;
 
 import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import java.io.IOException;
 
 public final class CurrencyUnitDeserializer extends JsonDeserializer<CurrencyUnit> {
@@ -33,7 +33,7 @@ public final class CurrencyUnitDeserializer extends JsonDeserializer<CurrencyUni
     @Override
     public CurrencyUnit deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
         final String currencyCode = parser.getValueAsString();
-        return CurrencyUnitBuilder.of(currencyCode, "default").build();
+        return Monetary.getCurrency(currencyCode);
     }
 
 }

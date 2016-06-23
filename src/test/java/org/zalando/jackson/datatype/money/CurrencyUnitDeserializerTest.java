@@ -25,6 +25,7 @@ import org.javamoney.moneta.CurrencyUnitBuilder;
 import org.junit.Test;
 
 import javax.money.CurrencyUnit;
+import javax.money.UnknownCurrencyException;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.is;
@@ -35,11 +36,16 @@ public final class CurrencyUnitDeserializerTest {
     private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     @Test
-    public void shouldDeerialize() throws IOException {
+    public void shouldDeserialize() throws IOException {
         final CurrencyUnit actual = mapper.readValue("\"EUR\"", CurrencyUnit.class);
         final CurrencyUnit expected = CurrencyUnitBuilder.of("EUR", "default").build();
         
         assertThat(actual, is(expected));
+    }
+
+    @Test(expected = UnknownCurrencyException.class)
+    public void shouldNotDeserializeInvalidCurrency() throws IOException {
+        mapper.readValue("\"FOO\"", CurrencyUnit.class);
     }
     
 }
