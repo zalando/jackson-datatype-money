@@ -41,4 +41,9 @@ public final class CurrencyDeserializerTest {
         assertThat(actual, is(expected));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotDeserializeInvalidCurrency() throws IOException {
+        mapper.readValue("\"FOO\"", Currency.class);
+    }
+
 }
