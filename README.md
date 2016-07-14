@@ -93,7 +93,7 @@ The first example serializes a monetary amount using the `de_DE` locale:
 
 ```java
 ObjectWriter writer = mapper.writer().with(Locale.GERMANY);
-writer.writeValueAsString(Money.of(29.95 "EUR"));
+writer.writeValueAsString(Money.of(29.95, "EUR"));
 ```
 
 ```json
@@ -108,7 +108,7 @@ The following example uses `en_US`:
 
 ```java
 ObjectWriter writer = mapper.writer().with(Locale.US);
-writer.writeValueAsString(Money.of(29.95 "USD"));
+writer.writeValueAsString(Money.of(29.95, "USD"));
 ```
 
 ```json
