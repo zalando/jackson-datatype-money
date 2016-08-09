@@ -155,19 +155,6 @@ public final class MonetaryAmountDeserializerTest {
         // we need a json node to get a TreeTraversingParser with codec of type ObjectReader
         JsonNode ownerNode = unit.readTree("{ \"value\" : {\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"} }");
         
-        class Owner {
-            
-            private MonetaryAmount value;
-
-            public MonetaryAmount getValue() {
-                return value;
-            }
-
-            public void setValue(MonetaryAmount value) {
-                this.value = value;
-            }
-        }
-
         
         final Owner owner = new Owner();
         owner.setValue(amount);
@@ -178,5 +165,17 @@ public final class MonetaryAmountDeserializerTest {
         assertThat(result.getValue(), is(amount));
     }
     
+    private static class Owner {
+        
+        private MonetaryAmount value;
+
+        public MonetaryAmount getValue() {
+            return value;
+        }
+
+        public void setValue(MonetaryAmount value) {
+            this.value = value;
+        }
+    }
 
 }
