@@ -20,6 +20,7 @@ package org.zalando.jackson.datatype.money;
  * ​⁣
  */
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.javamoney.moneta.FastMoney;
@@ -141,5 +142,41 @@ public final class MonetaryAmountDeserializerTest {
 
         assertThat(amount, is(notNullValue()));
     }
+    
+    @Test
+    public void shouldUpdateExistingValueUsingTreeTraversingParser() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
+        
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        assertThat(amount, is(notNullValue()));
+        
+        // we need a json node to get a TreeTraversingParser with codec of type ObjectReader
+        JsonNode ownerNode = unit.readTree("{ \"value\" : {\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"} }");
+        
+        class Owner {
+            
+            private MonetaryAmount value;
+
+            public MonetaryAmount getValue() {
+                return value;
+            }
+
+            public void setValue(MonetaryAmount value) {
+                this.value = value;
+            }
+        }
+
+        
+        final Owner owner = new Owner();
+        owner.setValue(amount);
+        
+        // try to update
+        Owner result = unit.readerForUpdating(owner).readValue(ownerNode);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getValue(), is(amount));
+    }
+    
 
 }
