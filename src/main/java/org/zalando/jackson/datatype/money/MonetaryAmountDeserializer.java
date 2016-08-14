@@ -45,7 +45,7 @@ public final class MonetaryAmountDeserializer extends JsonDeserializer<MonetaryA
 
     @Override
     public MonetaryAmount deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
-        final MoneyNode node = parser.readValueAs(MoneyNode.class);
+        final MoneyNode node = context.readValue(parser, MoneyNode.class);
         return factory.create(node.getAmount(), node.getCurrency());
     }
 
