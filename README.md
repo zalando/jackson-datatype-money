@@ -5,6 +5,7 @@
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.zalando/jackson-datatype-money/badge.svg)](http://www.javadoc.io/doc/org.zalando/jackson-datatype-money)
 [![Release](https://img.shields.io/github/release/zalando/jackson-datatype-money.svg)](https://github.com/zalando/jackson-datatype-money/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/jackson-datatype-money.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/jackson-datatype-money)
+[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/zalando/jackson-datatype-money/master/LICENSE)
 
 *Jackson Datatype Money* is a [Jackson](https://github.com/codehaus/jackson) module to support JSON serialization and
 deserialization of [JavaMoney](https://github.com/JavaMoney/jsr354-api) data types. It fills a niche, in that it
