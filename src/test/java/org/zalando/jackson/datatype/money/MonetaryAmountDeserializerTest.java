@@ -102,6 +102,7 @@ public final class MonetaryAmountDeserializerTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void defaultConstructorShouldFallbackToMoney() throws IOException {
         final ObjectMapper unit = new ObjectMapper().registerModule(new SimpleModule()
                 .addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer())

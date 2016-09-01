@@ -61,9 +61,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <java-money.version>1.0</java-money.version>
-        <spring.version>4.1.6.RELEASE</spring.version>
-        <jackson.version>2.6.1</jackson.version>
+        <money-api.version>1.0.1</money-api.version>
+        <moneta.version>1.1</moneta.version>
+        <jackson.version>2.8.2</jackson.version>
     </properties>
 
     <dependencies>
@@ -105,7 +105,7 @@
                 <version>3.3</version>
                 <configuration>
                     <compilerArgs>
-                        <compilerArg>-Xlint:unchecked</compilerArg>
+                        <compilerArg>-Xlint:unchecked,deprecation</compilerArg>
                         <compilerArg>-Werror</compilerArg>
                     </compilerArgs>
                 </configuration>
@@ -267,12 +267,12 @@
                 <dependency>
                     <groupId>javax.money</groupId>
                     <artifactId>money-api-bp</artifactId>
-                    <version>${java-money.version}</version>
+                    <version>${money-api.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta-bp</artifactId>
-                    <version>${java-money.version}</version>
+                    <version>${moneta.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -285,12 +285,12 @@
                 <dependency>
                     <groupId>javax.money</groupId>
                     <artifactId>money-api</artifactId>
-                    <version>${java-money.version}</version>
+                    <version>${money-api.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta</artifactId>
-                    <version>${java-money.version}</version>
+                    <version>${moneta.version}</version>
                 </dependency>
             </dependencies>
         </profile>
