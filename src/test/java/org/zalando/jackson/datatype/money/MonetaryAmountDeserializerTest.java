@@ -2,13 +2,11 @@ package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
 import org.junit.Test;
 
-import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -101,19 +99,6 @@ public final class MonetaryAmountDeserializerTest {
         assertThat(actual, comparesEqualTo(new BigDecimal("29.95")));
     }
 
-    @Test
-    @SuppressWarnings("deprecation")
-    public void defaultConstructorShouldFallbackToMoney() throws IOException {
-        final ObjectMapper unit = new ObjectMapper().registerModule(new SimpleModule()
-                .addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer())
-                .addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer()));
-
-        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
-        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
-
-        assertThat(amount, is(instanceOf(Money.class)));
-    }
-    
     @Test
     public void shouldIgnoreFormattedValue() throws IOException {
         final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();

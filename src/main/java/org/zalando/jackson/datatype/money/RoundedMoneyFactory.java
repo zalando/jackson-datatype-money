@@ -4,11 +4,10 @@ import org.javamoney.moneta.RoundedMoney;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
-import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
 import java.math.BigDecimal;
 
-public final class RoundedMoneyFactory implements MonetaryAmountFactory {
+public final class RoundedMoneyFactory implements MonetaryAmountFactory<RoundedMoney> {
     
     private final MonetaryOperator rounding;
 
@@ -21,7 +20,7 @@ public final class RoundedMoneyFactory implements MonetaryAmountFactory {
     }
 
     @Override
-    public MonetaryAmount create(final BigDecimal amount, final CurrencyUnit currency) {
+    public RoundedMoney create(final BigDecimal amount, final CurrencyUnit currency) {
         return RoundedMoney.of(amount, currency, rounding);
     }
 
