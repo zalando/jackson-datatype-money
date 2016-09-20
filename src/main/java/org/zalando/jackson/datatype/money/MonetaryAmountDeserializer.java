@@ -7,24 +7,16 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import javax.money.MonetaryAmount;
 import java.io.IOException;
 
-public final class MonetaryAmountDeserializer extends JsonDeserializer<MonetaryAmount> {
+public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDeserializer<M> {
 
-    private final MonetaryAmountFactory factory;
+    private final MonetaryAmountFactory<M> factory;
 
-    /**
-     * @deprecated use {@link #MonetaryAmountDeserializer(MonetaryAmountFactory)} with {@link MoneyFactory}
-     */
-    @Deprecated
-    public MonetaryAmountDeserializer() {
-        this(new MoneyFactory());
-    }
-
-    public MonetaryAmountDeserializer(final MonetaryAmountFactory factory) {
+    public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory) {
         this.factory = factory;
     }
 
     @Override
-    public MonetaryAmount deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
+    public M deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
         final MoneyNode node = context.readValue(parser, MoneyNode.class);
         return factory.create(node.getAmount(), node.getCurrency());
     }

@@ -4,8 +4,8 @@ import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 
-public interface MonetaryAmountFactory {
+public interface MonetaryAmountFactory<M extends MonetaryAmount> {
 
-    MonetaryAmount create(final BigDecimal amount, final CurrencyUnit currency);
+    M create(final BigDecimal amount, final CurrencyUnit currency);
 
 }

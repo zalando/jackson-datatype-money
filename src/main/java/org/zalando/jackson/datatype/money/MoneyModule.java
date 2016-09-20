@@ -2,6 +2,9 @@ package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.javamoney.moneta.FastMoney;
+import org.javamoney.moneta.Money;
+import org.javamoney.moneta.RoundedMoney;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
@@ -15,7 +18,7 @@ public final class MoneyModule extends SimpleModule {
         this(new MoneyFactory());
     }
 
-    public MoneyModule(final MonetaryAmountFactory factory) {
+    public MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> factory) {
         this(factory, new NoopMonetaryAmountFormatFactory());
     }
     
@@ -23,7 +26,8 @@ public final class MoneyModule extends SimpleModule {
         this(new MoneyFactory(), factory);
     }
 
-    public MoneyModule(final MonetaryAmountFactory amountFactory, final MonetaryAmountFormatFactory formatFactory) {
+    public MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
+            final MonetaryAmountFormatFactory formatFactory) {
         super(MoneyModule.class.getSimpleName(),
                 getVersion());
         
@@ -33,7 +37,11 @@ public final class MoneyModule extends SimpleModule {
         
         addDeserializer(Currency.class, new CurrencyDeserializer());
         addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer());
-        addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer(amountFactory));
+        addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer<>(amountFactory));
+
+        addDeserializer(Money.class, new MonetaryAmountDeserializer<>(new MoneyFactory()));
+        addDeserializer(FastMoney.class, new MonetaryAmountDeserializer<>(new FastMoneyFactory()));
+        addDeserializer(RoundedMoney.class, new MonetaryAmountDeserializer<>(new RoundedMoneyFactory()));
     }
 
     @SuppressWarnings("deprecation")
