@@ -35,6 +35,7 @@ public final class RoundedMoneyDeserializerTest {
         final BigDecimal expected = new BigDecimal("29.95");
 
         assertThat(actual, comparesEqualTo(expected));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
     @Test
@@ -46,6 +47,7 @@ public final class RoundedMoneyDeserializerTest {
 
         final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
         assertThat(actual, comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
 }

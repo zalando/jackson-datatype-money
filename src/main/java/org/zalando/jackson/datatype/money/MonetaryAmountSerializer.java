@@ -15,24 +15,35 @@ import java.util.Locale;
 public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
 
     private final MonetaryAmountFormatFactory factory;
+    private final FieldNames names;
 
     public MonetaryAmountSerializer() {
-        this(new NoopMonetaryAmountFormatFactory());
+        this(new NoopMonetaryAmountFormatFactory(), FieldNames.defaults());
     }
 
-    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory) {
+    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, FieldNames names) {
         this.factory = factory;
+        this.names = names;
     }
 
     @Override
-    public void serialize(final MonetaryAmount value, final JsonGenerator generator, final SerializerProvider provider)
+    public void serialize(final MonetaryAmount value, final JsonGenerator json, final SerializerProvider provider)
             throws IOException {
 
         final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
         final CurrencyUnit currency = value.getCurrency();
         @Nullable final String formatted = format(value, provider);
 
-        generator.writeObject(new MoneyNode(amount, currency, formatted));
+        json.writeStartObject();
+        {
+            json.writeNumberField(names.getAmount(), amount);
+            json.writeObjectField(names.getCurrency(), currency);
+
+            if (formatted != null) {
+                json.writeStringField(names.getFormatted(), formatted);
+            }
+        }
+        json.writeEndObject();
     }
 
     @Nullable

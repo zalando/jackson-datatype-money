@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.zalando.jackson.datatype.money.FieldNames.defaults;
 
 public final class MonetaryAmountSerializerTest {
 
@@ -51,6 +52,7 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation") // TODO switch to #withFormatFactory after removing the constructor
     public void shouldSerializeWithFormattedGermanValue() throws JsonProcessingException {
         final ObjectMapper unit = new ObjectMapper()
                 .registerModule(new MoneyModule(new DefaultMonetaryAmountFormatFactory()));
@@ -66,12 +68,29 @@ public final class MonetaryAmountSerializerTest {
     @Test
     public void shouldSerializeWithFormattedAmericanValue() throws JsonProcessingException {
         final ObjectMapper unit = new ObjectMapper()
-                .registerModule(new MoneyModule(new DefaultMonetaryAmountFormatFactory()));
+                .registerModule(new MoneyModule().withFormatFactory(new DefaultMonetaryAmountFormatFactory()));
 
         final String expected = "{\"amount\":29.95,\"currency\":\"USD\",\"formatted\":\"USD29.95\"}";
 
         final ObjectWriter writer = unit.writer().with(Locale.US);
         final String actual = writer.writeValueAsString(Money.of(29.95, "USD"));
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldSerializeWithCustomName() throws IOException {
+        final ObjectMapper unit = new ObjectMapper()
+                .registerModule(new MoneyModule().withFormatFactory(new DefaultMonetaryAmountFormatFactory())
+                        .withFieldNames(defaults()
+                                .withAmount("value")
+                                .withCurrency("unit")
+                                .withFormatted("pretty")));
+
+        final String expected = "{\"value\":29.95,\"unit\":\"EUR\",\"pretty\":\"29,95 EUR\"}";
+
+        final ObjectWriter writer = unit.writer().with(Locale.GERMANY);
+        final String actual = writer.writeValueAsString(Money.of(29.95, "EUR"));
 
         assertThat(actual, is(expected));
     }

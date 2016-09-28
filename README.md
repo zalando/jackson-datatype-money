@@ -27,7 +27,8 @@ JSON while reflecting our API preferences, as shown in the following example. We
 ## Features
 - enables you to express monetary amounts in JSON
 - can be used in a REST APIs
-- offers customizable serialization by locale
+- customized field names
+- localization of formatted monetary amounts
 - allows you to implement RESTful API endpoints that format monetary amounts based on the Accept-Language header
 - is unique and flexible
 
@@ -83,7 +84,8 @@ have to pass in a `MonetaryAmountFormatFactory` implementation to the `MoneyModu
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule(new DefaultMonetaryAmountFormatFactory()));
+    .registerModule(new MoneyModule()
+        .withFormatFactory(new DefaultMonetaryAmountFormatFactory()));
 ```
 
 The `DefaultMonetaryAmountFormatFactory` delegates directly to `MonetaryFormats.getAmountFormat(Locale, String...)`.
@@ -132,14 +134,15 @@ to the `MoneyModule`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule(new FastMoneyFactory()));
+    .registerModule(new MoneyModule()
+        .withAmountFactory(new FastMoneyFactory()));
 ```
 
 If you're using Java 8, you can also pass in a method reference:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule(FastMoney::of));
+    .registerModule(new MoneyModule().withAmountFactory(FastMoney::of));
 ```
 
 *Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from Moneta, the reference
@@ -150,6 +153,23 @@ implementation of JavaMoney:
 | `org.javamoney.moneta.FastMoney`    | [`org.zalando.jackson.datatype.money.FastMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java)       |
 | `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
 | `org.javamoney.moneta.RoundedMoney` | [`org.zalando.jackson.datatype.money.RoundedMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
+
+### Custom Field Names
+
+As you have seen in the previous examples the `MoneyModule` uses the field names `amount`, `currency` and `formatted`
+ by default. Those names can be overridden if desired:
+ 
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule()
+        .withFieldNames(FieldNames.valueOf("value", "unit", "pretty")));
+```
+
+Overriding only one of them can be achieved by using: 
+
+```java
+FieldNames.defaults().withCurrency("unit")
+```
 
 ## Usage
 

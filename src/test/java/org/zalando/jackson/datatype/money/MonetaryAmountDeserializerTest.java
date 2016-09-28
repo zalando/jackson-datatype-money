@@ -1,5 +1,6 @@
 package org.zalando.jackson.datatype.money;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javamoney.moneta.FastMoney;
@@ -16,6 +17,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.zalando.jackson.datatype.money.FieldNames.defaults;
 
 public final class MonetaryAmountDeserializerTest {
 
@@ -40,11 +42,13 @@ public final class MonetaryAmountDeserializerTest {
         final BigDecimal expected = new BigDecimal("29.95");
 
         assertThat(actual, comparesEqualTo(expected));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
     @Test
     public void shouldDeserializeFastMoney() throws IOException {
-        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new FastMoneyFactory()));
+        final ObjectMapper unit = new ObjectMapper()
+                .registerModule(new MoneyModule().withAmountFactory(new FastMoneyFactory()));
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
@@ -54,7 +58,8 @@ public final class MonetaryAmountDeserializerTest {
 
     @Test
     public void shouldDeserializeFastMoneyCorrectly() throws IOException {
-        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new FastMoneyFactory()));
+        final ObjectMapper unit = new ObjectMapper()
+                .registerModule(new MoneyModule().withAmountFactory(new FastMoneyFactory()));
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
@@ -63,11 +68,13 @@ public final class MonetaryAmountDeserializerTest {
         final BigDecimal expected = new BigDecimal("29.95");
 
         assertThat(actual, comparesEqualTo(expected));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
     @Test
     public void shouldDeserializeRoundedMoney() throws IOException {
-        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new RoundedMoneyFactory()));
+        final ObjectMapper unit = new ObjectMapper()
+                .registerModule(new MoneyModule().withAmountFactory(new RoundedMoneyFactory()));
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
@@ -77,7 +84,8 @@ public final class MonetaryAmountDeserializerTest {
 
     @Test
     public void shouldDeserializeRoundedMoneyCorrectly() throws IOException {
-        final ObjectMapper unit = new ObjectMapper().registerModule(new MoneyModule(new RoundedMoneyFactory()));
+        final ObjectMapper unit = new ObjectMapper()
+                .registerModule(new MoneyModule().withAmountFactory(new RoundedMoneyFactory()));
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
@@ -86,6 +94,7 @@ public final class MonetaryAmountDeserializerTest {
         final BigDecimal expected = new BigDecimal("29.95");
 
         assertThat(actual, comparesEqualTo(expected));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
     
     @Test
@@ -97,6 +106,25 @@ public final class MonetaryAmountDeserializerTest {
 
         final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
         assertThat(actual, comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+    }
+
+    @Test
+    public void shouldDeserializeWithCustomName() throws IOException {
+        final ObjectMapper unit = new ObjectMapper()
+                .registerModule(new MoneyModule()
+                        .withFieldNames(defaults()
+                                .withAmount("value")
+                                .withCurrency("unit")));
+
+        final String content = "{\"value\":29.95,\"unit\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
+
+        final BigDecimal actual = amount.getNumber().numberValueExact(BigDecimal.class);
+        final BigDecimal expected = new BigDecimal("29.95");
+
+        assertThat(actual, comparesEqualTo(expected));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
     @Test
@@ -113,14 +141,13 @@ public final class MonetaryAmountDeserializerTest {
     public void shouldUpdateExistingValueUsingTreeTraversingParser() throws IOException {
         final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
         
-        final String content = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"}";
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
 
         assertThat(amount, is(notNullValue()));
         
         // we need a json node to get a TreeTraversingParser with codec of type ObjectReader
         JsonNode ownerNode = unit.readTree("{ \"value\" : {\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"} }");
-        
         
         final Owner owner = new Owner();
         owner.setValue(amount);
@@ -142,6 +169,22 @@ public final class MonetaryAmountDeserializerTest {
         public void setValue(MonetaryAmount value) {
             this.value = value;
         }
+    }
+
+    @Test(expected = JsonProcessingException.class)
+    public void shouldFailToDeserializeWithoutAmount() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
+
+        final String content = "{\"currency\":\"EUR\"}";
+        unit.readValue(content, MonetaryAmount.class);
+    }
+
+    @Test(expected = JsonProcessingException.class)
+    public void shouldFailToDeserializeWithoutCurrency() throws IOException {
+        final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
+
+        final String content = "{\"amount\":29.95}";
+        unit.readValue(content, MonetaryAmount.class);
     }
 
 }
