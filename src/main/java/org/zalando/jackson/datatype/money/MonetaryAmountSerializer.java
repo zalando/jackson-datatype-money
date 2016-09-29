@@ -18,32 +18,36 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
     private final FieldNames names;
 
     public MonetaryAmountSerializer() {
-        this(new NoopMonetaryAmountFormatFactory(), FieldNames.defaults());
+        this(new NoopMonetaryAmountFormatFactory());
     }
 
-    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, FieldNames names) {
+    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory) {
+        this(factory, FieldNames.defaults());
+    }
+
+    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
     }
 
     @Override
-    public void serialize(final MonetaryAmount value, final JsonGenerator json, final SerializerProvider provider)
+    public void serialize(final MonetaryAmount value, final JsonGenerator generator, final SerializerProvider provider)
             throws IOException {
 
         final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
         final CurrencyUnit currency = value.getCurrency();
         @Nullable final String formatted = format(value, provider);
 
-        json.writeStartObject();
+        generator.writeStartObject();
         {
-            json.writeNumberField(names.getAmount(), amount);
-            json.writeObjectField(names.getCurrency(), currency);
+            generator.writeNumberField(names.getAmount(), amount);
+            generator.writeObjectField(names.getCurrency(), currency);
 
             if (formatted != null) {
-                json.writeStringField(names.getFormatted(), formatted);
+                generator.writeStringField(names.getFormatted(), formatted);
             }
         }
-        json.writeEndObject();
+        generator.writeEndObject();
     }
 
     @Nullable

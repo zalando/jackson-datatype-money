@@ -6,7 +6,7 @@ import java.util.Locale;
 final class NoopMonetaryAmountFormatFactory implements MonetaryAmountFormatFactory {
 
     @Override
-    public MonetaryAmountFormat create(Locale locale) {
+    public MonetaryAmountFormat create(final Locale locale) {
         return null;
     }
     
