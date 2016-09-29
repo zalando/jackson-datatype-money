@@ -15,13 +15,19 @@ import java.util.Locale;
 public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
 
     private final MonetaryAmountFormatFactory factory;
+    private final FieldNames names;
 
     public MonetaryAmountSerializer() {
         this(new NoopMonetaryAmountFormatFactory());
     }
 
     public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory) {
+        this(factory, FieldNames.defaults());
+    }
+
+    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names) {
         this.factory = factory;
+        this.names = names;
     }
 
     @Override
@@ -32,7 +38,16 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
         final CurrencyUnit currency = value.getCurrency();
         @Nullable final String formatted = format(value, provider);
 
-        generator.writeObject(new MoneyNode(amount, currency, formatted));
+        generator.writeStartObject();
+        {
+            generator.writeNumberField(names.getAmount(), amount);
+            generator.writeObjectField(names.getCurrency(), currency);
+
+            if (formatted != null) {
+                generator.writeStringField(names.getFormatted(), formatted);
+            }
+        }
+        generator.writeEndObject();
     }
 
     @Nullable
