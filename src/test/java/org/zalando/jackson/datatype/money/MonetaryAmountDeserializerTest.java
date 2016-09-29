@@ -209,15 +209,6 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     }
 
     @Test
-    public void shouldNotFailToDeserializeWithFormatted() throws IOException {
-        final ObjectMapper unit = unit();
-
-        final String content = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"}";
-
-        unit.readValue(content, type);
-    }
-
-    @Test
     public void shouldFailToDeserializeWithAdditionalProperties() throws IOException {
         final ObjectMapper unit = unit();
 
