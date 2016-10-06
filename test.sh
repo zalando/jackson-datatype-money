@@ -10,10 +10,10 @@ trap rollback EXIT INT TERM
 
 # test
 jenv local 1.7
-mvn dependency:tree clean test
+./mvnw dependency:tree clean test
 
 jenv local 1.8
-mvn dependency:tree clean test
+./mvnw dependency:tree clean test
 
 jenv local 1.8
-mvn dependency:tree clean test -P jdk7,-jdk8
+./mvnw dependency:tree clean test -P jdk7,-jdk8

@@ -11,10 +11,10 @@ cache:
     - $HOME/.m2
 
 script:
-  - mvn clean verify
+  - ./mvnw clean verify
 
 after_success:
-  - mvn coveralls:report
+  - ./mvnw coveralls:report
 
 notifications:
   email:
