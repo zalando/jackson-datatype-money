@@ -6,12 +6,16 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
 cache:
   directories:
     - $HOME/.m2
 
-script:
-  - ./mvnw clean verify
+script: ./mvnw clean verify
 
 after_success:
   - ./mvnw coveralls:report
