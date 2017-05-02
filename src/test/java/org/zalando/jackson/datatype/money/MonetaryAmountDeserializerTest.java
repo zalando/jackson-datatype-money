@@ -113,6 +113,17 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     }
 
     @Test
+    public void shouldDeserializeCorrectlyWhenAmountIsAStringValue() throws IOException {
+        final ObjectMapper unit = unit();
+
+        final String content = "{\"currency\":\"EUR\",\"amount\":\"29.95\"}";
+        final MonetaryAmount amount = unit.readValue(content, type);
+
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+    }
+
+    @Test
     public void shouldDeserializeCorrectlyWhenPropertiesAreInDifferentOrder() throws IOException {
         final ObjectMapper unit = unit();
 

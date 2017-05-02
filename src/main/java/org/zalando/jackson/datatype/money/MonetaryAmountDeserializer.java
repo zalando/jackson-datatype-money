@@ -48,7 +48,7 @@ public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends 
             parser.nextToken();
 
             if (field.equals(names.getAmount())) {
-                amount = parser.getDecimalValue();
+                amount = context.readValue(parser, BigDecimal.class);
             } else if (field.equals(names.getCurrency())) {
                 currency = context.readValue(parser, CurrencyUnit.class);
             } else if (field.equals(names.getFormatted())) {
