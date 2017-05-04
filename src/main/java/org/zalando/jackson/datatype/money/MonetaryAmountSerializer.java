@@ -27,7 +27,7 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
     }
 
     public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names) {
-        this(factory, names, numberAsStringDefault());
+        this(factory, names, false);
     }
 
     public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names, final boolean numberAsString) {
@@ -58,10 +58,6 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
             }
         }
         generator.writeEndObject();
-    }
-
-    static boolean numberAsStringDefault() {
-        return false;
     }
 
     @Nullable

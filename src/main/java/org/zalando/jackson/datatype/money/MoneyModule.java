@@ -87,7 +87,7 @@ public final class MoneyModule extends Module {
     @Deprecated
     public MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
             final MonetaryAmountFormatFactory formatFactory) {
-        this(amountFactory, formatFactory, FieldNames.defaults(), MonetaryAmountSerializer.numberAsStringDefault());
+        this(amountFactory, formatFactory, FieldNames.defaults(), false);
     }
 
     private MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
