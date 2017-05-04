@@ -36,10 +36,9 @@ public final class MonetaryAmountSerializerTest {
     @Parameters(name = "{0}")
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {FastMoney.of(29.95, "EUR")},
-                {Money.of(29.95, "EUR")},
-                {RoundedMoney.of(29.95, "EUR", Monetary.getDefaultRounding())},
-        });
+            {FastMoney.of(29.95, "EUR")},
+            {Money.of(29.95, "EUR")},
+            {RoundedMoney.of(29.95, "EUR", Monetary.getDefaultRounding())},});
     }
 
     private ObjectMapper unit() {
@@ -63,7 +62,7 @@ public final class MonetaryAmountSerializerTest {
 
         assertThat(actual, is(expected));
     }
-    
+
     @Test
     public void defaultConstructorShouldFallbackToNoFormatting() throws IOException {
         final ObjectMapper unit = unit(new SimpleModule()
@@ -75,11 +74,11 @@ public final class MonetaryAmountSerializerTest {
 
         assertThat(actual, is(expected));
     }
-    
+
     @Test
     public void shouldSerializeWithoutFormattedValueIfFactoryProducesNull() throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withFormatFactory(new NoopMonetaryAmountFormatFactory()));
-        
+
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
 
@@ -114,10 +113,10 @@ public final class MonetaryAmountSerializerTest {
     @Test
     public void shouldSerializeWithCustomName() throws IOException {
         final ObjectMapper unit = unit(module().withFormatFactory(new DefaultMonetaryAmountFormatFactory())
-                        .withFieldNames(defaults()
-                                .withAmount("value")
-                                .withCurrency("unit")
-                                .withFormatted("pretty")));
+                .withFieldNames(defaults()
+                        .withAmount("value")
+                        .withCurrency("unit")
+                        .withFormatted("pretty")));
 
         final String expected = "{\"value\":29.95,\"unit\":\"EUR\",\"pretty\":\"29,95 EUR\"}";
 
@@ -127,4 +126,13 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
+    @Test
+    public void shouldSerializeAmountAsStringValue() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module().withNumberAsString(true));
+
+        final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(amount);
+
+        assertThat(actual, is(expected));
+    }
 }

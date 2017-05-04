@@ -19,6 +19,7 @@ public final class MoneyModule extends Module {
     private final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory;
     private final MonetaryAmountFormatFactory formatFactory;
     private final FieldNames names;
+    private final boolean numberAsString;
 
     @SuppressWarnings("deprecation")
     public MoneyModule() {
@@ -42,7 +43,7 @@ public final class MoneyModule extends Module {
 
         serializers.addSerializer(Currency.class, new CurrencySerializer());
         serializers.addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
-        serializers.addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(formatFactory, names));
+        serializers.addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(formatFactory, names, numberAsString));
 
         context.addSerializers(serializers);
 
@@ -86,27 +87,40 @@ public final class MoneyModule extends Module {
     @Deprecated
     public MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
             final MonetaryAmountFormatFactory formatFactory) {
-        this(amountFactory, formatFactory, FieldNames.defaults());
+        this(amountFactory, formatFactory, FieldNames.defaults(), MonetaryAmountSerializer.numberAsStringDefault());
     }
 
     private MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
-            final MonetaryAmountFormatFactory formatFactory, final FieldNames names) {
+            final MonetaryAmountFormatFactory formatFactory, final FieldNames names, final boolean numberAsString) {
 
         this.amountFactory = amountFactory;
         this.formatFactory = formatFactory;
         this.names = names;
+        this.numberAsString = numberAsString;
     }
 
     public MoneyModule withAmountFactory(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory) {
-        return new MoneyModule(amountFactory, formatFactory, names);
+        return new MoneyModule(amountFactory, formatFactory, names, numberAsString);
     }
 
     public MoneyModule withFormatFactory(final MonetaryAmountFormatFactory formatFactory) {
-        return new MoneyModule(amountFactory, formatFactory, names);
+        return new MoneyModule(amountFactory, formatFactory, names, numberAsString);
     }
 
     public MoneyModule withFieldNames(final FieldNames names) {
-        return new MoneyModule(amountFactory, formatFactory, names);
+        return new MoneyModule(amountFactory, formatFactory, names, numberAsString);
+    }
+
+    /**
+     * Feature that forces MonetaryAmount number to be written as JSON string.
+     * Default state is 'false', meaning that number is to
+     * be serialized using basic numeric serialization (as JSON
+     * number, integral or floating point).
+     *
+     * @param numberAsString If true, number value is written out as JSON String.
+     */
+    public MoneyModule withNumberAsString(final boolean numberAsString) {
+        return new MoneyModule(amountFactory, formatFactory, names, numberAsString);
     }
 
 }
