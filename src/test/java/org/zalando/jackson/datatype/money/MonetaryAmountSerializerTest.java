@@ -1,5 +1,6 @@
 package org.zalando.jackson.datatype.money;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -129,6 +130,17 @@ public final class MonetaryAmountSerializerTest {
     @Test
     public void shouldSerializeAmountAsStringValue() throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withNumberAsString(true));
+
+        final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(amount);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldRespectJacksonFeatureByDefault() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module());
+        unit.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
 
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
