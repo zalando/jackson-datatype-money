@@ -16,6 +16,7 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
 
     private final MonetaryAmountFormatFactory factory;
     private final FieldNames names;
+    private final boolean numberAsString;
 
     public MonetaryAmountSerializer() {
         this(new NoopMonetaryAmountFormatFactory());
@@ -26,8 +27,13 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
     }
 
     public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names) {
+        this(factory, names, false);
+    }
+
+    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names, final boolean numberAsString) {
         this.factory = factory;
         this.names = names;
+        this.numberAsString = numberAsString;
     }
 
     @Override
@@ -40,7 +46,11 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
 
         generator.writeStartObject();
         {
-            generator.writeNumberField(names.getAmount(), amount);
+            if (numberAsString) {
+                generator.writeStringField(names.getAmount(), amount.toString());
+            } else {
+                generator.writeNumberField(names.getAmount(), amount);
+            }
             generator.writeObjectField(names.getCurrency(), currency);
 
             if (formatted != null) {

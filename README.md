@@ -19,7 +19,7 @@ JSON while reflecting our API preferences, as shown in the following example. We
 
 ```json
 {
-  "amount": 29.95, 
+  "amount": 29.95,
   "currency": "EUR"
 }
 ```
@@ -77,6 +77,22 @@ For serialization this module currently supports the following data types:
 | [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)     | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
 | [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java) |                                                   | `{"amount": 99.95, "currency": "EUR"}` |
 
+By default amount number is serialized as a JSON number.
+To serialize number as a JSON string, you have to enable the feature:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule()
+        .withNumberAsString(true));
+```
+
+```json
+{
+    "amount": "99.95",
+    "currency": "EUR"
+}
+```
+
 ### Formatting
 
 A special feature for serializing monetary amounts is *formatting*, which is **disabled by default**. To enable it, you
@@ -103,7 +119,7 @@ writer.writeValueAsString(Money.of(29.95, "EUR"));
 
 ```json
 {
-  "amount": 29.95, 
+  "amount": 29.95,
   "currency": "EUR",
   "formatted": "29,95 EUR"
 }
@@ -118,13 +134,13 @@ writer.writeValueAsString(Money.of(29.95, "USD"));
 
 ```json
 {
-  "amount": 29.95, 
+  "amount": 29.95,
   "currency": "USD",
   "formatted": "USD29.95"
 }
 ```
 
-More sophisticated formatting rules can be supported by implementing `MonetaryAmountFormatFactory` directly. 
+More sophisticated formatting rules can be supported by implementing `MonetaryAmountFormatFactory` directly.
 
 ### Deserialization
 
@@ -146,7 +162,7 @@ ObjectMapper mapper = new ObjectMapper()
 ```
 
 *Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from Moneta, the reference
-implementation of JavaMoney: 
+implementation of JavaMoney:
 
 | `MonetaryAmount` Implementation     | Factory                                                                                                                               |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -154,18 +170,20 @@ implementation of JavaMoney:
 | `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
 | `org.javamoney.moneta.RoundedMoney` | [`org.zalando.jackson.datatype.money.RoundedMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
 
+Module supports deserialization of amount number from JSON number as well as from JSON string without any special configuration required.
+
 ### Custom Field Names
 
 As you have seen in the previous examples the `MoneyModule` uses the field names `amount`, `currency` and `formatted`
  by default. Those names can be overridden if desired:
- 
+
 ```java
 ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule()
         .withFieldNames(FieldNames.valueOf("value", "unit", "pretty")));
 ```
 
-Overriding only one of them can be achieved by using: 
+Overriding only one of them can be achieved by using:
 
 ```java
 FieldNames.defaults().withCurrency("unit")
@@ -191,7 +209,7 @@ If you have questions, concerns, bug reports, etc, please file an issue in this 
 
 ## Getting involved
 
-To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. 
-Please note that we aim to keep this project straightforward and focused. We are not looking to add lots of features; 
-we just want it to keep doing what it does, as well and as powerfully as possible. For more details check the 
+To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change.
+Please note that we aim to keep this project straightforward and focused. We are not looking to add lots of features;
+we just want it to keep doing what it does, as well and as powerfully as possible. For more details check the
 [contribution guidelines](CONTRIBUTING.md).
