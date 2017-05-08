@@ -1,6 +1,7 @@
 package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
@@ -11,11 +12,13 @@ import org.javamoney.moneta.RoundedMoney;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import java.util.Currency;
+import javax.money.NumberValue;
 
 import static com.fasterxml.jackson.core.util.VersionUtil.mavenVersionFor;
 
 public final class MoneyModule extends Module {
 
+    private final JsonSerializer<NumberValue> numberValueSerializer;
     private final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory;
     private final MonetaryAmountFormatFactory formatFactory;
     private final FieldNames names;
@@ -42,6 +45,7 @@ public final class MoneyModule extends Module {
 
         serializers.addSerializer(Currency.class, new CurrencySerializer());
         serializers.addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
+        serializers.addSerializer(NumberValue.class, numberValueSerializer);
         serializers.addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(formatFactory, names));
 
         context.addSerializers(serializers);
@@ -86,27 +90,31 @@ public final class MoneyModule extends Module {
     @Deprecated
     public MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
             final MonetaryAmountFormatFactory formatFactory) {
-        this(amountFactory, formatFactory, FieldNames.defaults());
+        this(new NumberValueSerializer(), amountFactory, formatFactory, FieldNames.defaults());
     }
 
-    private MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
+    private MoneyModule(final JsonSerializer<NumberValue> numberValueSerializer, final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
             final MonetaryAmountFormatFactory formatFactory, final FieldNames names) {
 
+        this.numberValueSerializer = numberValueSerializer;
         this.amountFactory = amountFactory;
         this.formatFactory = formatFactory;
         this.names = names;
     }
 
     public MoneyModule withAmountFactory(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory) {
-        return new MoneyModule(amountFactory, formatFactory, names);
+        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
     }
 
     public MoneyModule withFormatFactory(final MonetaryAmountFormatFactory formatFactory) {
-        return new MoneyModule(amountFactory, formatFactory, names);
+        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
     }
 
     public MoneyModule withFieldNames(final FieldNames names) {
-        return new MoneyModule(amountFactory, formatFactory, names);
+        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
     }
 
+    public MoneyModule withNumberValueSerializer(final JsonSerializer<NumberValue> numberValueSerializer) {
+        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
+    }
 }
