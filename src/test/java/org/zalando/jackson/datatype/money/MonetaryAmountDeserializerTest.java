@@ -20,6 +20,7 @@ import org.junit.runners.Parameterized.Parameters;
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
+import javax.money.NumberValue;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -83,6 +84,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         @SuppressWarnings("deprecation")
         final ObjectMapper unit = unit(new SimpleModule()
                 .addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer())
+                .addDeserializer(NumberValue.class, new DecimalNumberValueDeserializer())
                 .addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer<>(new MoneyFactory())));
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";

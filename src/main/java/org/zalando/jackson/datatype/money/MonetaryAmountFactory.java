@@ -6,6 +6,6 @@ import java.math.BigDecimal;
 
 public interface MonetaryAmountFactory<M extends MonetaryAmount> {
 
-    M create(final BigDecimal amount, final CurrencyUnit currency);
+    M create(BigDecimal amount, CurrencyUnit currency);
 
 }

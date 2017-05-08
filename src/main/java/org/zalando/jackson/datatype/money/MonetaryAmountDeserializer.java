@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
+import javax.money.NumberValue;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends 
 
     @Override
     public M deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
-        BigDecimal amount = null;
+        NumberValue amount = null;
         CurrencyUnit currency = null;
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
@@ -48,7 +49,7 @@ public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends 
             parser.nextToken();
 
             if (field.equals(names.getAmount())) {
-                amount = context.readValue(parser, BigDecimal.class);
+                amount = context.readValue(parser, NumberValue.class);
             } else if (field.equals(names.getCurrency())) {
                 currency = context.readValue(parser, CurrencyUnit.class);
             } else if (field.equals(names.getFormatted())) {
@@ -65,7 +66,9 @@ public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends 
         checkPresent(parser, amount, names.getAmount());
         checkPresent(parser, currency, names.getCurrency());
 
-        return factory.create(amount, currency);
+        // TODO move this to factory
+        final BigDecimal decimal = amount.numberValueExact(BigDecimal.class);
+        return factory.create(decimal, currency);
     }
 
     private void checkPresent(final JsonParser parser, @Nullable final Object value, final String name)
