@@ -11,11 +11,11 @@ import static org.junit.Assert.assertThat;
 
 public final class CurrencyDeserializerTest {
 
-    private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+    private final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
 
     @Test
     public void shouldDeserialize() throws IOException {
-        final Currency actual = mapper.readValue("\"EUR\"", Currency.class);
+        final Currency actual = unit.readValue("\"EUR\"", Currency.class);
         final Currency expected = Currency.getInstance("EUR");
         
         assertThat(actual, is(expected));
@@ -23,7 +23,17 @@ public final class CurrencyDeserializerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotDeserializeInvalidCurrency() throws IOException {
-        mapper.readValue("\"FOO\"", Currency.class);
+        unit.readValue("\"FOO\"", Currency.class);
+    }
+
+    @Test
+    public void shouldDeserializeWithTyping() throws IOException {
+        unit.enableDefaultTyping();
+
+        final Currency actual = unit.readValue("\"EUR\"", Currency.class);
+        final Currency expected = Currency.getInstance("EUR");
+
+        assertThat(actual, is(expected));
     }
 
 }

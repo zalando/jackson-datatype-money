@@ -1,10 +1,10 @@
 package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.javamoney.moneta.FastMoney;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -237,10 +238,33 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
 
     @Test
     public void shouldNotFailToDeserializeWithAdditionalProperties() throws IOException {
-        final ObjectMapper unit = unit().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        final ObjectMapper unit = unit().disable(FAIL_ON_UNKNOWN_PROPERTIES);
 
         final String content = "{\"source\":{\"provider\":\"ECB\",\"date\":\"2016-09-29\"},\"amount\":29.95,\"currency\":\"EUR\",\"version\":\"1\"}";
         unit.readValue(content, type);
+    }
+
+    @Test
+    public void shouldDeserializeWithTypeInformation() throws IOException {
+        final ObjectMapper unit = unit(module())
+                .enableDefaultTypingAsProperty(DefaultTyping.OBJECT_AND_NON_CONCRETE, "type")
+                .disable(FAIL_ON_UNKNOWN_PROPERTIES);
+
+        final String content = "{\"type\":\"org.javamoney.moneta.Money\",\"amount\":29.95,\"currency\":\"EUR\"}";
+        final M amount = unit.readValue(content, type);
+
+        // type information is ignored?!
+        assertThat(amount, is(instanceOf(type)));
+    }
+
+    @Test
+    public void shouldDeserializeWithoutTypeInformation() throws IOException {
+        final ObjectMapper unit = unit(module()).enableDefaultTyping();
+
+        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final M amount = unit.readValue(content, type);
+
+        assertThat(amount, is(instanceOf(type)));
     }
 
 }

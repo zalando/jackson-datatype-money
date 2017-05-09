@@ -12,14 +12,14 @@ import static org.junit.Assert.assertThat;
 
 public final class CurrencyUnitSerializerTest {
     
-    private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+    private final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
 
     @Test
     public void shouldSerialize() throws JsonProcessingException {
         final String expected = "EUR";
         final CurrencyUnit currency = CurrencyUnitBuilder.of(expected, "default").build();
 
-        final String actual = mapper.writeValueAsString(currency);
+        final String actual = unit.writeValueAsString(currency);
         
         assertThat(actual, is('"' + expected + '"'));
     }

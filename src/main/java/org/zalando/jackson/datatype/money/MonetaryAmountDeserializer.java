@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
@@ -36,6 +37,14 @@ public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends 
     public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
+    }
+
+    @Override
+    public Object deserializeWithType(final JsonParser parser, final DeserializationContext context,
+            final TypeDeserializer deserializer) throws IOException {
+
+        // effectively assuming no type information at all
+        return deserialize(parser, context);
     }
 
     @Override

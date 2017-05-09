@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import lombok.Value;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
@@ -147,6 +148,21 @@ public final class MonetaryAmountSerializerTest {
 
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Value
+    private static final class Price {
+        MonetaryAmount amount;
+    }
+
+    @Test
+    public void shouldSerializeWithType() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module()).enableDefaultTyping();
+
+        final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}";
+        final String actual = unit.writeValueAsString(new Price(amount));
 
         assertThat(actual, is(expected));
     }

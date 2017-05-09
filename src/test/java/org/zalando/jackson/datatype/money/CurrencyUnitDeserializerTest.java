@@ -13,11 +13,11 @@ import static org.junit.Assert.assertThat;
 
 public final class CurrencyUnitDeserializerTest {
 
-    private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+    private final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
 
     @Test
     public void shouldDeserialize() throws IOException {
-        final CurrencyUnit actual = mapper.readValue("\"EUR\"", CurrencyUnit.class);
+        final CurrencyUnit actual = unit.readValue("\"EUR\"", CurrencyUnit.class);
         final CurrencyUnit expected = CurrencyUnitBuilder.of("EUR", "default").build();
         
         assertThat(actual, is(expected));
@@ -25,7 +25,17 @@ public final class CurrencyUnitDeserializerTest {
 
     @Test(expected = UnknownCurrencyException.class)
     public void shouldNotDeserializeInvalidCurrency() throws IOException {
-        mapper.readValue("\"FOO\"", CurrencyUnit.class);
+        unit.readValue("\"FOO\"", CurrencyUnit.class);
     }
-    
+
+    @Test
+    public void shouldDeserializeWithTyping() throws IOException {
+        unit.enableDefaultTyping();
+
+        final CurrencyUnit actual = unit.readValue("\"EUR\"", CurrencyUnit.class);
+        final CurrencyUnit expected = CurrencyUnitBuilder.of("EUR", "default").build();
+
+        assertThat(actual, is(expected));
+    }
+
 }
