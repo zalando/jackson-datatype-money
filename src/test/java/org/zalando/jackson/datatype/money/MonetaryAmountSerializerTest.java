@@ -131,7 +131,7 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
-    public void shouldSerializeAmountAsStringValue() throws JsonProcessingException {
+    public void shouldSerializeAmountAsQuotedDecimal() throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withNumberValueSerializer(new QuotedDecimalNumberValueSerializer()));
 
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
