@@ -1,5 +1,6 @@
 package org.zalando.jackson.datatype.money;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import javax.money.MonetaryAmount;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
+import javax.money.NumberValue;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -63,11 +65,12 @@ public final class MonetaryAmountSerializerTest {
 
         assertThat(actual, is(expected));
     }
-    
+
     @Test
     public void defaultConstructorShouldFallbackToNoFormatting() throws IOException {
         final ObjectMapper unit = unit(new SimpleModule()
                 .addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer())
+                .addSerializer(NumberValue.class, new DecimalNumberValueSerializer())
                 .addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer()));
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
@@ -75,11 +78,11 @@ public final class MonetaryAmountSerializerTest {
 
         assertThat(actual, is(expected));
     }
-    
+
     @Test
     public void shouldSerializeWithoutFormattedValueIfFactoryProducesNull() throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withFormatFactory(new NoopMonetaryAmountFormatFactory()));
-        
+
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
 
@@ -123,6 +126,27 @@ public final class MonetaryAmountSerializerTest {
 
         final ObjectWriter writer = unit.writer().with(Locale.GERMANY);
         final String actual = writer.writeValueAsString(amount);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldSerializeAmountAsQuotedDecimal() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module().withNumberValueSerializer(new QuotedDecimalNumberValueSerializer()));
+
+        final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(amount);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldRespectJacksonFeatureByDefault() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module());
+        unit.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
+
+        final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(amount);
 
         assertThat(actual, is(expected));
     }

@@ -9,7 +9,7 @@ import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import javax.money.format.MonetaryAmountFormat;
 import java.io.IOException;
-import java.math.BigDecimal;
+import javax.money.NumberValue;
 import java.util.Locale;
 
 public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
@@ -34,13 +34,13 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
     public void serialize(final MonetaryAmount value, final JsonGenerator generator, final SerializerProvider provider)
             throws IOException {
 
-        final BigDecimal amount = value.getNumber().numberValueExact(BigDecimal.class);
+        final NumberValue number = value.getNumber();
         final CurrencyUnit currency = value.getCurrency();
         @Nullable final String formatted = format(value, provider);
 
         generator.writeStartObject();
         {
-            generator.writeNumberField(names.getAmount(), amount);
+            generator.writeObjectField(names.getAmount(), number);
             generator.writeObjectField(names.getCurrency(), currency);
 
             if (formatted != null) {
