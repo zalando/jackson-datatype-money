@@ -107,7 +107,7 @@ ObjectMapper mapper = new ObjectMapper()
 The `DefaultMonetaryAmountFormatFactory` delegates directly to `MonetaryFormats.getAmountFormat(Locale, String...)`.
 
 Formatting only affects the serialization and can be customized based on the *current* locale, as defined by the
-[`SerializationConfig`](http://wiki.fasterxml.com/SerializationConfig). This allows to implement RESTful API endpoints
+[`SerializationConfig`](https://fasterxml.github.io/jackson-databind/javadoc/2.0.0/com/fasterxml/jackson/databind/SerializationConfig.html#with\(java.util.Locale\)). This allows to implement RESTful API endpoints
 that format monetary amounts based on the `Accept-Language` header.
 
 The first example serializes a monetary amount using the `de_DE` locale:
