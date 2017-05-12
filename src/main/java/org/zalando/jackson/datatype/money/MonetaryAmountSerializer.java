@@ -3,6 +3,7 @@ package org.zalando.jackson.datatype.money;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
@@ -28,6 +29,14 @@ public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmoun
     public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
+    }
+
+    @Override
+    public void serializeWithType(final MonetaryAmount value, final JsonGenerator generator,
+            final SerializerProvider provider, final TypeSerializer serializer) throws IOException {
+
+        // effectively assuming no type information at all
+        serialize(value, generator, provider);
     }
 
     @Override
