@@ -9,7 +9,7 @@ import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.io.IOException;
 
-public final class CurrencyUnitDeserializer extends JsonDeserializer<CurrencyUnit> {
+final class CurrencyUnitDeserializer extends JsonDeserializer<CurrencyUnit> {
 
     @Override
     public Object deserializeWithType(final JsonParser parser, final DeserializationContext context,

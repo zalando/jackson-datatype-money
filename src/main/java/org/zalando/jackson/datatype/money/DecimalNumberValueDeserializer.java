@@ -10,7 +10,7 @@ import javax.money.NumberValue;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-public final class DecimalNumberValueDeserializer extends JsonDeserializer<NumberValue> {
+final class DecimalNumberValueDeserializer extends JsonDeserializer<NumberValue> {
 
     @Override
     public Object deserializeWithType(final JsonParser parser, final DeserializationContext context,
