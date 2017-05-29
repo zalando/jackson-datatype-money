@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import javax.money.NumberValue;
 
-public final class DecimalNumberValueSerializer extends JsonSerializer<NumberValue> {
+final class DecimalNumberValueSerializer extends JsonSerializer<NumberValue> {
 
     @Override
     public void serialize(final NumberValue value, final JsonGenerator generator,

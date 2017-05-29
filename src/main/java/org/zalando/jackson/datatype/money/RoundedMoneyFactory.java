@@ -8,15 +8,11 @@ import javax.money.MonetaryOperator;
 import javax.money.NumberValue;
 import java.math.BigDecimal;
 
-public final class RoundedMoneyFactory implements MonetaryAmountFactory<RoundedMoney> {
+final class RoundedMoneyFactory implements MonetaryAmountFactory<RoundedMoney> {
     
     private final MonetaryOperator rounding;
 
-    public RoundedMoneyFactory() {
-        this(Monetary.getDefaultRounding());
-    }
-
-    public RoundedMoneyFactory(final MonetaryOperator rounding) {
+    RoundedMoneyFactory(final MonetaryOperator rounding) {
         this.rounding = rounding;
     }
 

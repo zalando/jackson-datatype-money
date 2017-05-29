@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.Value;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
@@ -15,10 +14,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
-import javax.money.NumberValue;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
@@ -69,7 +66,7 @@ public final class MonetaryAmountSerializerTest {
 
     @Test
     public void shouldSerializeWithoutFormattedValueIfFactoryProducesNull() throws JsonProcessingException {
-        final ObjectMapper unit = unit(module().withFormatFactory(new NoopMonetaryAmountFormatFactory()));
+        final ObjectMapper unit = unit(module().withoutFormatting());
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
@@ -79,7 +76,7 @@ public final class MonetaryAmountSerializerTest {
 
     @Test
     public void shouldSerializeWithFormattedGermanValue() throws JsonProcessingException {
-        final ObjectMapper unit = unit(new MoneyModule().withFormatFactory(new DefaultMonetaryAmountFormatFactory()));
+        final ObjectMapper unit = unit(new MoneyModule().withDefaultFormatting());
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"29,95 EUR\"}";
 
@@ -91,7 +88,7 @@ public final class MonetaryAmountSerializerTest {
 
     @Test
     public void shouldSerializeWithFormattedAmericanValue() throws JsonProcessingException {
-        final ObjectMapper unit = unit(module().withFormatFactory(new DefaultMonetaryAmountFormatFactory()));
+        final ObjectMapper unit = unit(module().withDefaultFormatting());
 
         final String expected = "{\"amount\":29.95,\"currency\":\"USD\",\"formatted\":\"USD29.95\"}";
 
@@ -103,7 +100,7 @@ public final class MonetaryAmountSerializerTest {
 
     @Test
     public void shouldSerializeWithCustomName() throws IOException {
-        final ObjectMapper unit = unit(module().withFormatFactory(new DefaultMonetaryAmountFormatFactory())
+        final ObjectMapper unit = unit(module().withDefaultFormatting()
                         .withFieldNames(defaults()
                                 .withAmount("value")
                                 .withCurrency("unit")
@@ -118,8 +115,18 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
+    public void shouldSerializeAmountAsDecimal() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module().withDecimalNumbers());
+
+        final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(amount);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
     public void shouldSerializeAmountAsQuotedDecimal() throws JsonProcessingException {
-        final ObjectMapper unit = unit(module().withNumberValueSerializer(new QuotedDecimalNumberValueSerializer()));
+        final ObjectMapper unit = unit(module().withQuotedDecimalNumbers());
 
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
