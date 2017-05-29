@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import javax.annotation.Nullable;
 import javax.money.MonetaryAmount;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,21 +37,45 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     public final ExpectedException exception = ExpectedException.none();
 
     private final Class<M> type;
-    private final MonetaryAmountFactory<M> factory;
+    private final Configurer configurer;
 
-    public MonetaryAmountDeserializerTest(final Class<M> type, @Nullable final MonetaryAmountFactory<M> factory) {
+    public MonetaryAmountDeserializerTest(final Class<M> type, final Configurer configurer) {
         this.type = type;
-        this.factory = factory;
+        this.configurer = configurer;
     }
 
     @Parameters(name = "{0}")
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {MonetaryAmount.class, null},
-                {FastMoney.class, new FastMoneyFactory()},
-                {Money.class, new MoneyFactory()},
-                {RoundedMoney.class, new RoundedMoneyFactory()},
+                {MonetaryAmount.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module;
+                    }
+                }},
+                {FastMoney.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withFastMoney();
+                    }
+                }},
+                {Money.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withMoney();
+                    }
+                }},
+                {RoundedMoney.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withRoundedMoney();
+                    }
+                }},
         });
+    }
+
+    private interface Configurer {
+        MoneyModule configure(MoneyModule module);
     }
 
     private ObjectMapper unit() {
@@ -64,7 +87,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     }
 
     private MoneyModule module() {
-        return factory == null ? new MoneyModule() : new MoneyModule().withAmountFactory(factory);
+        return configurer.configure(new MoneyModule());
     }
 
     @Test
