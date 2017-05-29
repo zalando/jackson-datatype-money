@@ -24,7 +24,7 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
     private final MonetaryAmountFactory<M> factory;
     private final FieldNames names;
 
-    public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
+    MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
     }

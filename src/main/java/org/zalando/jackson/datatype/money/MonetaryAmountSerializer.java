@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
+import javax.money.NumberValue;
 import javax.money.format.MonetaryAmountFormat;
 import java.io.IOException;
-import javax.money.NumberValue;
 import java.util.Locale;
 
 final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
@@ -18,15 +18,7 @@ final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
     private final MonetaryAmountFormatFactory factory;
     private final FieldNames names;
 
-    public MonetaryAmountSerializer() {
-        this(new NoopMonetaryAmountFormatFactory());
-    }
-
-    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory) {
-        this(factory, FieldNames.defaults());
-    }
-
-    public MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names) {
+    MonetaryAmountSerializer(final MonetaryAmountFormatFactory factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
     }
