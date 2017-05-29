@@ -10,7 +10,8 @@ import javax.money.NumberValue;
 public final class DecimalNumberValueSerializer extends JsonSerializer<NumberValue> {
 
     @Override
-    public void serialize(final NumberValue value, final JsonGenerator generator, final SerializerProvider serializers) throws IOException {
+    public void serialize(final NumberValue value, final JsonGenerator generator,
+            final SerializerProvider serializers) throws IOException {
         final BigDecimal amount = value.numberValueExact(BigDecimal.class);
         generator.writeNumber(amount);
     }

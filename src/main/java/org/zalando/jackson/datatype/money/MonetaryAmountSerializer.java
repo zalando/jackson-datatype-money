@@ -13,7 +13,7 @@ import java.io.IOException;
 import javax.money.NumberValue;
 import java.util.Locale;
 
-public final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
+final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
 
     private final MonetaryAmountFormatFactory factory;
     private final FieldNames names;

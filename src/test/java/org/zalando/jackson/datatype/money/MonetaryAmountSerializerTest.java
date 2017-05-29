@@ -68,19 +68,6 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
-    public void defaultConstructorShouldFallbackToNoFormatting() throws IOException {
-        final ObjectMapper unit = unit(new SimpleModule()
-                .addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer())
-                .addSerializer(NumberValue.class, new DecimalNumberValueSerializer())
-                .addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer()));
-
-        final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
-        final String actual = unit.writeValueAsString(amount);
-
-        assertThat(actual, is(expected));
-    }
-
-    @Test
     public void shouldSerializeWithoutFormattedValueIfFactoryProducesNull() throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withFormatFactory(new NoopMonetaryAmountFormatFactory()));
 
