@@ -13,7 +13,6 @@ import org.javamoney.moneta.RoundedMoney;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
 import javax.money.NumberValue;
-import java.util.Currency;
 
 public final class MoneyModule extends Module {
 
@@ -53,7 +52,6 @@ public final class MoneyModule extends Module {
     public void setupModule(final SetupContext context) {
         final SimpleSerializers serializers = new SimpleSerializers();
 
-        serializers.addSerializer(Currency.class, new CurrencySerializer());
         serializers.addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
         serializers.addSerializer(NumberValue.class, numberValueSerializer);
         serializers.addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(formatFactory, names));
@@ -62,7 +60,6 @@ public final class MoneyModule extends Module {
 
         final SimpleDeserializers deserializers = new SimpleDeserializers();
 
-        deserializers.addDeserializer(Currency.class, new CurrencyDeserializer());
         deserializers.addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer());
         deserializers.addDeserializer(NumberValue.class, new DecimalNumberValueDeserializer());
         deserializers.addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer<>(amountFactory, names));
