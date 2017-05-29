@@ -65,9 +65,7 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
         checkPresent(parser, amount, names.getAmount());
         checkPresent(parser, currency, names.getCurrency());
 
-        // TODO move this to factory
-        final BigDecimal decimal = amount.numberValueExact(BigDecimal.class);
-        return factory.create(decimal, currency);
+        return factory.create(amount, currency);
     }
 
     private void checkPresent(final JsonParser parser, @Nullable final Object value, final String name)

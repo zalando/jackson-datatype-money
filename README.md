@@ -71,7 +71,6 @@ For serialization this module currently supports the following data types:
 
 | Input                                                                                                                             | Standard                                          | Output                                 |
 |-----------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------------------------------------|
-| [`java.util.Currency`](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html)                                         | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
 | [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)     | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
 | [`javax.money.NumberValue`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/NumberValue.java)       |                                                   | `99.95`                                |
 | [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java) |                                                   | `{"amount": 99.95, "currency": "EUR"}` |

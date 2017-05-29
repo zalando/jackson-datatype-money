@@ -2,10 +2,10 @@ package org.zalando.jackson.datatype.money;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
-import java.math.BigDecimal;
+import javax.money.NumberValue;
 
 public interface MonetaryAmountFactory<M extends MonetaryAmount> {
 
-    M create(BigDecimal amount, CurrencyUnit currency);
+    M create(NumberValue amount, CurrencyUnit currency);
 
 }
