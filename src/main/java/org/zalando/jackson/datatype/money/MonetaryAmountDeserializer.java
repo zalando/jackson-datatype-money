@@ -24,16 +24,6 @@ public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends 
     private final MonetaryAmountFactory<M> factory;
     private final FieldNames names;
 
-    /**
-     *
-     * @param factory the amount factory used for deserialization of monetary amounts
-     * @deprecated as of 0.11.0 in favor of {@link #MonetaryAmountDeserializer(MonetaryAmountFactory, FieldNames)}
-     */
-    @Deprecated
-    public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory) {
-        this(factory, FieldNames.defaults());
-    }
-
     public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
