@@ -18,10 +18,10 @@ import org.junit.runners.Parameterized.Parameters;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
+import javax.money.NumberValue;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
-import javax.money.NumberValue;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -91,9 +91,8 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
-    @SuppressWarnings("deprecation") // TODO switch to #withFormatFactory after removing the constructor
     public void shouldSerializeWithFormattedGermanValue() throws JsonProcessingException {
-        final ObjectMapper unit = unit(new MoneyModule(new DefaultMonetaryAmountFormatFactory()));
+        final ObjectMapper unit = unit(new MoneyModule().withFormatFactory(new DefaultMonetaryAmountFormatFactory()));
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"29,95 EUR\"}";
 

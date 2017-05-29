@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
@@ -18,9 +17,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import javax.annotation.Nullable;
-import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
-import javax.money.NumberValue;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -73,20 +70,6 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     @Test
     public void shouldDeserializeMoneyByDefault() throws IOException {
         final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
-
-        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
-        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
-
-        assertThat(amount, is(instanceOf(Money.class)));
-    }
-
-    @Test
-    public void defaultConstructorShouldUseMoney() throws IOException {
-        @SuppressWarnings("deprecation")
-        final ObjectMapper unit = unit(new SimpleModule()
-                .addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer())
-                .addDeserializer(NumberValue.class, new DecimalNumberValueDeserializer())
-                .addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer<>(new MoneyFactory())));
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);

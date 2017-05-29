@@ -22,9 +22,19 @@ public final class MoneyModule extends Module {
     private final MonetaryAmountFormatFactory formatFactory;
     private final FieldNames names;
 
-    @SuppressWarnings("deprecation")
     public MoneyModule() {
-        this(new MoneyFactory());
+        this(new DecimalNumberValueSerializer(), new MoneyFactory(), new NoopMonetaryAmountFormatFactory(),
+                FieldNames.defaults());
+    }
+
+    private MoneyModule(final JsonSerializer<NumberValue> numberValueSerializer,
+            final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
+            final MonetaryAmountFormatFactory formatFactory, final FieldNames names) {
+
+        this.numberValueSerializer = numberValueSerializer;
+        this.amountFactory = amountFactory;
+        this.formatFactory = formatFactory;
+        this.names = names;
     }
 
     @Override
@@ -64,46 +74,8 @@ public final class MoneyModule extends Module {
         context.addDeserializers(deserializers);
     }
 
-    /**
-     * @param factory the amount factory used for deserialization of monetary amounts
-     * @deprecated as of 0.11.0 in favor of {@link #withAmountFactory(MonetaryAmountFactory)}
-     */
-    @Deprecated
-    @SuppressWarnings({"deprecation", "DeprecatedIsStillUsed"})
-    public MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> factory) {
-        this(factory, new NoopMonetaryAmountFormatFactory());
-    }
-
-    /**
-     * @param factory the amount factory used for formatting of monetary amounts
-     * @deprecated as of 0.11.0 in favor of {@link #withFormatFactory(MonetaryAmountFormatFactory)}
-     */
-    @Deprecated
-    @SuppressWarnings("deprecation")
-    public MoneyModule(final MonetaryAmountFormatFactory factory) {
-        this(new MoneyFactory(), factory);
-    }
-
-    /**
-     * @param amountFactory the amount factory used for deserialization of monetary amounts
-     * @param formatFactory the amount factory used for formatting of monetary amounts
-     * @deprecated as of 0.11.0 in favor of {@link #withAmountFactory(MonetaryAmountFactory)} and
-     * {@link #withFormatFactory(MonetaryAmountFormatFactory)}
-     */
-    @Deprecated
-    public MoneyModule(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
-            final MonetaryAmountFormatFactory formatFactory) {
-        this(new DecimalNumberValueSerializer(), amountFactory, formatFactory, FieldNames.defaults());
-    }
-
-    private MoneyModule(final JsonSerializer<NumberValue> numberValueSerializer,
-            final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
-            final MonetaryAmountFormatFactory formatFactory, final FieldNames names) {
-
-        this.numberValueSerializer = numberValueSerializer;
-        this.amountFactory = amountFactory;
-        this.formatFactory = formatFactory;
-        this.names = names;
+    public MoneyModule withNumberValueSerializer(final JsonSerializer<NumberValue> numberValueSerializer) {
+        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
     }
 
     public MoneyModule withAmountFactory(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory) {
@@ -118,7 +90,4 @@ public final class MoneyModule extends Module {
         return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
     }
 
-    public MoneyModule withNumberValueSerializer(final JsonSerializer<NumberValue> numberValueSerializer) {
-        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
-    }
 }
