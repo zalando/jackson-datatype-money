@@ -6,9 +6,9 @@ import lombok.experimental.Wither;
 
 @AllArgsConstructor(staticName = "valueOf")
 @Getter
-public final class FieldNames {
+final class FieldNames {
 
-    private static final FieldNames DEFAULT = FieldNames.valueOf("amount", "currency", "formatted");
+    static final FieldNames DEFAULT = FieldNames.valueOf("amount", "currency", "formatted");
 
     @Wither
     private final String amount;
@@ -19,7 +19,7 @@ public final class FieldNames {
     @Wither
     private final String formatted;
 
-    public static FieldNames defaults() {
+    static FieldNames defaults() {
         return DEFAULT;
     }
 

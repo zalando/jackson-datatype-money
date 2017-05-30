@@ -22,7 +22,6 @@ import java.util.Locale;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.zalando.jackson.datatype.money.FieldNames.defaults;
 
 @RunWith(Parameterized.class)
 public final class MonetaryAmountSerializerTest {
@@ -101,10 +100,9 @@ public final class MonetaryAmountSerializerTest {
     @Test
     public void shouldSerializeWithCustomName() throws IOException {
         final ObjectMapper unit = unit(module().withDefaultFormatting()
-                        .withFieldNames(defaults()
-                                .withAmount("value")
-                                .withCurrency("unit")
-                                .withFormatted("pretty")));
+                .withAmountFieldName("value")
+                .withCurrencyFieldName("unit")
+                .withFormattedFieldName("pretty"));
 
         final String expected = "{\"value\":29.95,\"unit\":\"EUR\",\"pretty\":\"29,95 EUR\"}";
 

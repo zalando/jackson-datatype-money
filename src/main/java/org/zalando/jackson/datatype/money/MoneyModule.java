@@ -18,24 +18,35 @@ import javax.money.NumberValue;
 
 public final class MoneyModule extends Module {
 
-    private final JsonSerializer<NumberValue> numberValueSerializer;
-    private final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory;
-    private final MonetaryAmountFormatFactory formatFactory;
+    private final JsonSerializer<? super NumberValue> numberValueSerializer;
     private final FieldNames names;
+    private final MonetaryAmountFormatFactory formatFactory;
+    private final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory;
+    private final FastMoneyFactory fastMoneyFactory;
+    private final MoneyFactory moneyFactory;
+    private final RoundedMoneyFactory roundedMoneyFactory;
 
     public MoneyModule() {
-        this(new DecimalNumberValueSerializer(), new MoneyFactory(), new NoopMonetaryAmountFormatFactory(),
-                FieldNames.defaults());
+        this(new DecimalNumberValueSerializer(), FieldNames.defaults(), new NoopMonetaryAmountFormatFactory(),
+                new MoneyFactory(), new FastMoneyFactory(), new MoneyFactory(),
+                new RoundedMoneyFactory(Monetary.getDefaultRounding()));
     }
 
-    private MoneyModule(final JsonSerializer<NumberValue> numberValueSerializer,
+    private MoneyModule(final JsonSerializer<? super NumberValue> numberValueSerializer,
+            final FieldNames names,
+            final MonetaryAmountFormatFactory formatFactory,
             final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
-            final MonetaryAmountFormatFactory formatFactory, final FieldNames names) {
+            final FastMoneyFactory fastMoneyFactory,
+            final MoneyFactory moneyFactory,
+            final RoundedMoneyFactory roundedMoneyFactory) {
 
         this.numberValueSerializer = numberValueSerializer;
-        this.amountFactory = amountFactory;
-        this.formatFactory = formatFactory;
         this.names = names;
+        this.formatFactory = formatFactory;
+        this.amountFactory = amountFactory;
+        this.fastMoneyFactory = fastMoneyFactory;
+        this.moneyFactory = moneyFactory;
+        this.roundedMoneyFactory = roundedMoneyFactory;
     }
 
     @Override
@@ -67,9 +78,9 @@ public final class MoneyModule extends Module {
         deserializers.addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer<>(amountFactory, names));
 
         // for reading into concrete implementation types
-        deserializers.addDeserializer(Money.class, new MonetaryAmountDeserializer<>(new MoneyFactory(), names));
-        deserializers.addDeserializer(FastMoney.class, new MonetaryAmountDeserializer<>(new FastMoneyFactory(), names));
-        deserializers.addDeserializer(RoundedMoney.class, new MonetaryAmountDeserializer<>(new RoundedMoneyFactory(Monetary.getDefaultRounding()), names));
+        deserializers.addDeserializer(Money.class, new MonetaryAmountDeserializer<>(moneyFactory, names));
+        deserializers.addDeserializer(FastMoney.class, new MonetaryAmountDeserializer<>(fastMoneyFactory, names));
+        deserializers.addDeserializer(RoundedMoney.class, new MonetaryAmountDeserializer<>(roundedMoneyFactory, names));
 
         context.addDeserializers(deserializers);
     }
@@ -82,8 +93,9 @@ public final class MoneyModule extends Module {
         return withNumbers(new QuotedDecimalNumberValueSerializer());
     }
 
-    public MoneyModule withNumbers(final JsonSerializer<NumberValue> numberValueSerializer) {
-        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
+    public MoneyModule withNumbers(final JsonSerializer<? super NumberValue> numberValueSerializer) {
+        return new MoneyModule(numberValueSerializer, names, formatFactory, amountFactory,
+                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
     }
 
     /**
@@ -91,7 +103,7 @@ public final class MoneyModule extends Module {
      * @return
      */
     public MoneyModule withFastMoney() {
-        return withMonetaryAmount(new FastMoneyFactory());
+        return withMonetaryAmount(fastMoneyFactory);
     }
 
     /**
@@ -99,7 +111,7 @@ public final class MoneyModule extends Module {
      * @return
      */
     public MoneyModule withMoney() {
-        return withMonetaryAmount(new MoneyFactory());
+        return withMonetaryAmount(moneyFactory);
     }
 
     /**
@@ -107,7 +119,7 @@ public final class MoneyModule extends Module {
      * @return
      */
     public MoneyModule withRoundedMoney() {
-        return withRoundedMoney(Monetary.getDefaultRounding());
+        return withMonetaryAmount(roundedMoneyFactory);
     }
 
     /**
@@ -115,11 +127,14 @@ public final class MoneyModule extends Module {
      * @return
      */
     public MoneyModule withRoundedMoney(final MonetaryOperator rounding) {
-        return withMonetaryAmount(new RoundedMoneyFactory(rounding));
+        final RoundedMoneyFactory factory = new RoundedMoneyFactory(rounding);
+        return new MoneyModule(numberValueSerializer, names, formatFactory, factory,
+                fastMoneyFactory, moneyFactory, factory);
     }
 
     public MoneyModule withMonetaryAmount(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory) {
-        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
+        return new MoneyModule(numberValueSerializer, names, formatFactory, amountFactory,
+                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
     }
 
     public MoneyModule withoutFormatting() {
@@ -131,11 +146,25 @@ public final class MoneyModule extends Module {
     }
 
     public MoneyModule withFormatting(final MonetaryAmountFormatFactory formatFactory) {
-        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
+        return new MoneyModule(numberValueSerializer, names, formatFactory, amountFactory,
+                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
     }
 
-    public MoneyModule withFieldNames(final FieldNames names) {
-        return new MoneyModule(numberValueSerializer, amountFactory, formatFactory, names);
+    public MoneyModule withAmountFieldName(final String name) {
+        return withFieldNames(names.withAmount(name));
+    }
+
+    public MoneyModule withCurrencyFieldName(final String name) {
+        return withFieldNames(names.withCurrency(name));
+    }
+
+    public MoneyModule withFormattedFieldName(final String name) {
+        return withFieldNames(names.withFormatted(name));
+    }
+
+    private MoneyModule withFieldNames(final FieldNames names) {
+        return new MoneyModule(numberValueSerializer, names, formatFactory, amountFactory,
+                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
     }
 
 }
