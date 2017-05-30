@@ -186,13 +186,9 @@ As you have seen in the previous examples the `MoneyModule` uses the field names
 ```java
 ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule()
-        .withFieldNames(FieldNames.valueOf("value", "unit", "pretty")));
-```
-
-Overriding only one of them can be achieved by using:
-
-```java
-FieldNames.defaults().withCurrency("unit")
+        .withAmountFieldName("value")
+        .withCurrencyFieldName("unit")
+        .withFormattedFieldName("pretty"));
 ```
 
 ## Usage

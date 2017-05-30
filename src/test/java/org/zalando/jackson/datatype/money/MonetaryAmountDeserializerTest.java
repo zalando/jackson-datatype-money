@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -28,7 +29,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
-import static org.zalando.jackson.datatype.money.FieldNames.defaults;
 
 @RunWith(Parameterized.class)
 public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
@@ -69,6 +69,12 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
                     @Override
                     public MoneyModule configure(final MoneyModule module) {
                         return module.withRoundedMoney();
+                    }
+                }},
+                {RoundedMoney.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withRoundedMoney(Monetary.getDefaultRounding());
                     }
                 }},
         });
@@ -146,9 +152,8 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     @Test
     public void shouldDeserializeWithCustomNames() throws IOException {
         final ObjectMapper unit = unit(module()
-                .withFieldNames(defaults()
-                        .withAmount("value")
-                        .withCurrency("unit")));
+                .withAmountFieldName("value")
+                .withCurrencyFieldName("unit"));
 
         final String content = "{\"value\":29.95,\"unit\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
