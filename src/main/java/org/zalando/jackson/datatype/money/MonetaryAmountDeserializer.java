@@ -19,22 +19,12 @@ import java.util.Arrays;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static java.lang.String.format;
 
-public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDeserializer<M> {
+final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDeserializer<M> {
 
     private final MonetaryAmountFactory<M> factory;
     private final FieldNames names;
 
-    /**
-     *
-     * @param factory the amount factory used for deserialization of monetary amounts
-     * @deprecated as of 0.11.0 in favor of {@link #MonetaryAmountDeserializer(MonetaryAmountFactory, FieldNames)}
-     */
-    @Deprecated
-    public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory) {
-        this(factory, FieldNames.defaults());
-    }
-
-    public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
+    MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
     }
@@ -75,9 +65,7 @@ public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends 
         checkPresent(parser, amount, names.getAmount());
         checkPresent(parser, currency, names.getCurrency());
 
-        // TODO move this to factory
-        final BigDecimal decimal = amount.numberValueExact(BigDecimal.class);
-        return factory.create(decimal, currency);
+        return factory.create(amount, currency);
     }
 
     private void checkPresent(final JsonParser parser, @Nullable final Object value, final String name)

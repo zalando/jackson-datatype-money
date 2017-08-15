@@ -7,7 +7,7 @@ import java.util.Locale;
 /**
  * @see MonetaryFormats#getAmountFormat(Locale, String...) 
  */
-public final class DefaultMonetaryAmountFormatFactory implements MonetaryAmountFormatFactory {
+final class DefaultMonetaryAmountFormatFactory implements MonetaryAmountFormatFactory {
 
     @Override
     public MonetaryAmountFormat create(final Locale locale) {

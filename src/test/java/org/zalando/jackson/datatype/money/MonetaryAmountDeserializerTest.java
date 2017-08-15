@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
@@ -17,10 +16,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import javax.annotation.Nullable;
-import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import javax.money.MonetaryAmount;
-import javax.money.NumberValue;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -32,7 +29,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
-import static org.zalando.jackson.datatype.money.FieldNames.defaults;
 
 @RunWith(Parameterized.class)
 public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
@@ -41,21 +37,51 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     public final ExpectedException exception = ExpectedException.none();
 
     private final Class<M> type;
-    private final MonetaryAmountFactory<M> factory;
+    private final Configurer configurer;
 
-    public MonetaryAmountDeserializerTest(final Class<M> type, @Nullable final MonetaryAmountFactory<M> factory) {
+    public MonetaryAmountDeserializerTest(final Class<M> type, final Configurer configurer) {
         this.type = type;
-        this.factory = factory;
+        this.configurer = configurer;
     }
 
     @Parameters(name = "{0}")
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {MonetaryAmount.class, null},
-                {FastMoney.class, new FastMoneyFactory()},
-                {Money.class, new MoneyFactory()},
-                {RoundedMoney.class, new RoundedMoneyFactory()},
+                {MonetaryAmount.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module;
+                    }
+                }},
+                {FastMoney.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withFastMoney();
+                    }
+                }},
+                {Money.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withMoney();
+                    }
+                }},
+                {RoundedMoney.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withRoundedMoney();
+                    }
+                }},
+                {RoundedMoney.class, new Configurer() {
+                    @Override
+                    public MoneyModule configure(final MoneyModule module) {
+                        return module.withRoundedMoney(Monetary.getDefaultRounding());
+                    }
+                }},
         });
+    }
+
+    private interface Configurer {
+        MoneyModule configure(MoneyModule module);
     }
 
     private ObjectMapper unit() {
@@ -67,26 +93,12 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     }
 
     private MoneyModule module() {
-        return factory == null ? new MoneyModule() : new MoneyModule().withAmountFactory(factory);
+        return configurer.configure(new MoneyModule());
     }
 
     @Test
     public void shouldDeserializeMoneyByDefault() throws IOException {
         final ObjectMapper unit = new ObjectMapper().findAndRegisterModules();
-
-        final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
-        final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
-
-        assertThat(amount, is(instanceOf(Money.class)));
-    }
-
-    @Test
-    public void defaultConstructorShouldUseMoney() throws IOException {
-        @SuppressWarnings("deprecation")
-        final ObjectMapper unit = unit(new SimpleModule()
-                .addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer())
-                .addDeserializer(NumberValue.class, new DecimalNumberValueDeserializer())
-                .addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer<>(new MoneyFactory())));
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
@@ -140,9 +152,8 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     @Test
     public void shouldDeserializeWithCustomNames() throws IOException {
         final ObjectMapper unit = unit(module()
-                .withFieldNames(defaults()
-                        .withAmount("value")
-                        .withCurrency("unit")));
+                .withAmountFieldName("value")
+                .withCurrencyFieldName("unit"));
 
         final String content = "{\"value\":29.95,\"unit\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);

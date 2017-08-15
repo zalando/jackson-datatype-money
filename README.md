@@ -71,19 +71,17 @@ For serialization this module currently supports the following data types:
 
 | Input                                                                                                                             | Standard                                          | Output                                 |
 |-----------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------------------------------------|
-| [`java.util.Currency`](https://docs.oracle.com/javase/8/docs/api/java/util/Currency.html)                                         | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
 | [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)     | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
 | [`javax.money.NumberValue`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/NumberValue.java)       |                                                   | `99.95`                                |
 | [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java) |                                                   | `{"amount": 99.95, "currency": "EUR"}` |
 
 
-By default amount's number value is serialized as a JSON number.
+By default amount's number value is serialized as a decimal JSON number.
 To serialize number as a JSON string, you have to configure the quoted decimal number value serializer:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule()
-        .withNumberValueSerializer(new QuotedDecimalNumberValueSerializer()));
+    .registerModule(new MoneyModule().withQuotedDecimalNumbers());
 ```
 
 ```json
@@ -96,15 +94,22 @@ ObjectMapper mapper = new ObjectMapper()
 ### Formatting
 
 A special feature for serializing monetary amounts is *formatting*, which is **disabled by default**. To enable it, you
-have to pass in a `MonetaryAmountFormatFactory` implementation to the `MoneyModule`:
+have to either enable default formatting:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new MoneyModule().withDefaultFormatting());
+```
+
+... or pass in a `MonetaryAmountFormatFactory` implementation to the `MoneyModule`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule()
-        .withFormatFactory(new DefaultMonetaryAmountFormatFactory()));
+        .withFormatting(new CustomMonetaryAmountFormatFactory()));
 ```
 
-The `DefaultMonetaryAmountFormatFactory` delegates directly to `MonetaryFormats.getAmountFormat(Locale, String...)`.
+The default formatting delegates directly to `MonetaryFormats.getAmountFormat(Locale, String...)`.
 
 Formatting only affects the serialization and can be customized based on the *current* locale, as defined by the
 [`SerializationConfig`](https://fasterxml.github.io/jackson-databind/javadoc/2.0.0/com/fasterxml/jackson/databind/SerializationConfig.html#with\(java.util.Locale\)). This allows to implement RESTful API endpoints
@@ -151,14 +156,15 @@ to the `MoneyModule`:
 ```java
 ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule()
-        .withAmountFactory(new FastMoneyFactory()));
+        .withMonetaryAmount(new CustomMonetaryAmountFactory()));
 ```
 
 If you're using Java 8, you can also pass in a method reference:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule().withAmountFactory(FastMoney::of));
+    .registerModule(new MoneyModule()
+        .withMonetaryAmount(FastMoney::of));
 ```
 
 *Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from Moneta, the reference
@@ -166,9 +172,9 @@ implementation of JavaMoney:
 
 | `MonetaryAmount` Implementation     | Factory                                                                                                                               |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `org.javamoney.moneta.FastMoney`    | [`org.zalando.jackson.datatype.money.FastMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java)       |
-| `org.javamoney.moneta.Money`        | [`org.zalando.jackson.datatype.money.MoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
-| `org.javamoney.moneta.RoundedMoney` | [`org.zalando.jackson.datatype.money.RoundedMoneyFactory`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
+| `org.javamoney.moneta.FastMoney`    | [`new MoneyModule().withFastMoney()`](src/main/java/org/zalando/jackson/datatype/money/FastMoneyFactory.java)       |
+| `org.javamoney.moneta.Money`        | [`new MoneyModule().withMoney()`](src/main/java/org/zalando/jackson/datatype/money/MoneyFactory.java)               |
+| `org.javamoney.moneta.RoundedMoney` | [`new MoneyModule().withRoundedMoney()`](src/main/java/org/zalando/jackson/datatype/money/RoundedMoneyFactory.java) |                                                                                                                             |
 
 Module supports deserialization of amount number from JSON number as well as from JSON string without any special configuration required.
 
@@ -180,13 +186,9 @@ As you have seen in the previous examples the `MoneyModule` uses the field names
 ```java
 ObjectMapper mapper = new ObjectMapper()
     .registerModule(new MoneyModule()
-        .withFieldNames(FieldNames.valueOf("value", "unit", "pretty")));
-```
-
-Overriding only one of them can be achieved by using:
-
-```java
-FieldNames.defaults().withCurrency("unit")
+        .withAmountFieldName("value")
+        .withCurrencyFieldName("unit")
+        .withFormattedFieldName("pretty"));
 ```
 
 ## Usage

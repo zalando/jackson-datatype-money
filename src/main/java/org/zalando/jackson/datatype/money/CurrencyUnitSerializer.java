@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import javax.money.CurrencyUnit;
 import java.io.IOException;
 
-public final class CurrencyUnitSerializer extends JsonSerializer<CurrencyUnit> {
+final class CurrencyUnitSerializer extends JsonSerializer<CurrencyUnit> {
 
     @Override
     public void serialize(final CurrencyUnit value, final JsonGenerator generator, final SerializerProvider serializers)
