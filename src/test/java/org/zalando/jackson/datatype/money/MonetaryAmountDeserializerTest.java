@@ -117,13 +117,24 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     }
 
     @Test
-    public void shouldDeserializeCorrectly() throws IOException {
+    public void shouldDeserialize() throws IOException {
         final ObjectMapper unit = unit();
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
         assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+    }
+
+    @Test
+    public void shouldDeserializeWithHighNumberOfFractionDigits() throws IOException {
+        final ObjectMapper unit = unit();
+
+        final String content = "{\"amount\":29.9501,\"currency\":\"EUR\"}";
+        final MonetaryAmount amount = unit.readValue(content, type);
+
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.9501")));
         assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
