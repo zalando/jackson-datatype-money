@@ -40,10 +40,10 @@ public final class MonetaryAmountSerializerTest {
     @Parameters(name = "{0}, {1}")
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {FastMoney.of(29.95, "EUR"), FastMoney.of(100.00, "EUR"), FastMoney.of(0.0001, "EUR")},
-                {Money.of(29.95, "EUR"), Money.of(100.00, "EUR"), Money.of(0.0001, "EUR")},
+                {FastMoney.of(29.95, "EUR"), FastMoney.of(100, "EUR"), FastMoney.of(0.0001, "EUR")},
+                {Money.of(29.95, "EUR"), Money.of(100, "EUR"), Money.of(0.0001, "EUR")},
                 {RoundedMoney.of(29.95, "EUR", getDefaultRounding()),
-                        RoundedMoney.of(100.00, "EUR", getDefaultRounding()),
+                        RoundedMoney.of(100, "EUR", getDefaultRounding()),
                         RoundedMoney.of(0.0001, "EUR", getDefaultRounding())},
         });
     }
