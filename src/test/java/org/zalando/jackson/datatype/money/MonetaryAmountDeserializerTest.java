@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -123,7 +122,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
         assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
@@ -134,7 +133,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.9501,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.9501")));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.9501")));
         assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
@@ -145,7 +144,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"currency\":\"EUR\",\"amount\":\"29.95\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
         assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
@@ -156,7 +155,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"currency\":\"EUR\",\"amount\":29.95}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
         assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
@@ -169,7 +168,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"value\":29.95,\"unit\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
         assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
@@ -180,7 +179,7 @@ public final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), comparesEqualTo(new BigDecimal("29.95")));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
         assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
     }
 
