@@ -14,12 +14,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static javax.money.Monetary.getDefaultRounding;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -27,17 +27,20 @@ import static org.junit.Assert.assertThat;
 public final class MonetaryAmountSerializerTest {
 
     private final MonetaryAmount amount;
+    private final MonetaryAmount hundred;
 
-    public MonetaryAmountSerializerTest(final MonetaryAmount amount) {
+    public MonetaryAmountSerializerTest(final MonetaryAmount amount, final MonetaryAmount hundred) {
         this.amount = amount;
+        this.hundred = hundred;
     }
 
-    @Parameters(name = "{0}")
+    @Parameters(name = "{0}, {1}")
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {FastMoney.of(29.95, "EUR")},
-                {Money.of(29.95, "EUR")},
-                {RoundedMoney.of(29.95, "EUR", Monetary.getDefaultRounding())},
+                {FastMoney.of(29.95, "EUR"), FastMoney.of(100.00, "EUR")},
+                {Money.of(29.95, "EUR"), Money.of(100.00, "EUR")},
+                {RoundedMoney.of(29.95, "EUR", getDefaultRounding()),
+                        RoundedMoney.of(100.00, "EUR", getDefaultRounding())},
         });
     }
 
@@ -133,12 +136,35 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
-    public void shouldRespectJacksonFeatureByDefault() throws JsonProcessingException {
+    public void shouldSerializeAmountAsQuotedDecimalPlainString() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module().withQuotedDecimalNumbers());
+        unit.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
+
+        final String expected = "{\"amount\":\"100\",\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(hundred);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldWriteNumbersAsStrings() throws JsonProcessingException {
         final ObjectMapper unit = unit(module());
-        unit.configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true);
+        unit.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
 
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldWriteNumbersAsPlainStrings() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module());
+        unit.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
+        unit.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
+
+        final String expected = "{\"amount\":\"100\",\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(hundred);
 
         assertThat(actual, is(expected));
     }
