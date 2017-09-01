@@ -50,8 +50,7 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
             parser.nextToken();
 
             if (field.equals(names.getAmount())) {
-                final BigDecimal decimal = context.readValue(parser, BigDecimal.class);
-                amount = DefaultNumberValue.of(decimal);
+                amount = DefaultNumberValue.of(context.readValue(parser, BigDecimal.class));
             } else if (field.equals(names.getCurrency())) {
                 currency = Monetary.getCurrency(parser.getValueAsString());
             } else if (field.equals(names.getFormatted())) {
