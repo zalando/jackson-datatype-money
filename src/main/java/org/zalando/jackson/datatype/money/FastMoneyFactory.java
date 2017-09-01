@@ -4,7 +4,6 @@ import org.javamoney.moneta.FastMoney;
 
 import javax.money.CurrencyUnit;
 import javax.money.NumberValue;
-import java.math.BigDecimal;
 
 final class FastMoneyFactory implements MonetaryAmountFactory<FastMoney> {
 

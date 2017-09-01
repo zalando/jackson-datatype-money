@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
+import org.javamoney.moneta.spi.DefaultNumberValue;
 
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.NumberValue;
 import java.io.IOException;
@@ -48,9 +50,10 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
             parser.nextToken();
 
             if (field.equals(names.getAmount())) {
-                amount = context.readValue(parser, NumberValue.class);
+                final BigDecimal decimal = context.readValue(parser, BigDecimal.class);
+                amount = DefaultNumberValue.of(decimal);
             } else if (field.equals(names.getCurrency())) {
-                currency = context.readValue(parser, CurrencyUnit.class);
+                currency = Monetary.getCurrency(parser.getValueAsString());
             } else if (field.equals(names.getFormatted())) {
                 //noinspection UnnecessaryContinue
                 continue;

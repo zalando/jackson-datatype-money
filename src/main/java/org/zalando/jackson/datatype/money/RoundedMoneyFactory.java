@@ -3,10 +3,8 @@ package org.zalando.jackson.datatype.money;
 import org.javamoney.moneta.RoundedMoney;
 
 import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import javax.money.MonetaryOperator;
 import javax.money.NumberValue;
-import java.math.BigDecimal;
 
 final class RoundedMoneyFactory implements MonetaryAmountFactory<RoundedMoney> {
     
