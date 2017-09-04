@@ -67,16 +67,17 @@ ObjectMapper mapper = new ObjectMapper()
 
 ### Serialization
 
-For serialization this module currently supports the following data types:
+For serialization this module currently supports
+[`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java)
+and will, by default, serialize it as:
 
-| Input                                                                                                                             | Standard                                          | Output                                 |
-|-----------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------------------------------------|
-| [`javax.money.CurrencyUnit`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/CurrencyUnit.java)     | [ISO-4217](http://en.wikipedia.org/wiki/ISO_4217) | `EUR`                                  |
-| [`javax.money.NumberValue`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/NumberValue.java)       |                                                   | `99.95`                                |
-| [`javax.money.MonetaryAmount`](https://github.com/JavaMoney/jsr354-api/blob/master/src/main/java/javax/money/MonetaryAmount.java) |                                                   | `{"amount": 99.95, "currency": "EUR"}` |
+```json
+{
+  "amount": 99.95,
+  "currency": "EUR"
+}
+```
 
-
-By default amount's number value is serialized as a decimal JSON number.
 To serialize number as a JSON string, you have to configure the quoted decimal number value serializer:
 
 ```java
