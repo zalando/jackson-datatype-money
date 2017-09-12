@@ -9,9 +9,11 @@ import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
 
+import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
+import java.util.Currency;
 
 public final class MoneyModule extends Module {
 
@@ -61,10 +63,12 @@ public final class MoneyModule extends Module {
     @Override
     public void setupModule(final SetupContext context) {
         final SimpleSerializers serializers = new SimpleSerializers();
+        serializers.addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
         serializers.addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(names, writer, formatFactory));
         context.addSerializers(serializers);
 
         final SimpleDeserializers deserializers = new SimpleDeserializers();
+        deserializers.addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer());
         deserializers.addDeserializer(MonetaryAmount.class, new MonetaryAmountDeserializer<>(amountFactory, names));
         // for reading into concrete implementation types
         deserializers.addDeserializer(Money.class, new MonetaryAmountDeserializer<>(moneyFactory, names));

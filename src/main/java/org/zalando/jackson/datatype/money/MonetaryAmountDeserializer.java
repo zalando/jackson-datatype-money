@@ -11,7 +11,6 @@ import org.javamoney.moneta.spi.DefaultNumberValue;
 
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.NumberValue;
 import java.io.IOException;
@@ -52,7 +51,7 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
             if (field.equals(names.getAmount())) {
                 amount = DefaultNumberValue.of(context.readValue(parser, BigDecimal.class));
             } else if (field.equals(names.getCurrency())) {
-                currency = Monetary.getCurrency(parser.getValueAsString());
+                currency = context.readValue(parser, CurrencyUnit.class);
             } else if (field.equals(names.getFormatted())) {
                 //noinspection UnnecessaryContinue
                 continue;
