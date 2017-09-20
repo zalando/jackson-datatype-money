@@ -43,7 +43,7 @@ final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
         generator.writeStartObject();
         {
             generator.writeObjectField(names.getAmount(), writer.write(value));
-            generator.writeStringField(names.getCurrency(), currency.getCurrencyCode());
+            generator.writeObjectField(names.getCurrency(), currency);
 
             if (formatted != null) {
                 generator.writeStringField(names.getFormatted(), formatted);
