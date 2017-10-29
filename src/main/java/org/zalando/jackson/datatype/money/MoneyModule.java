@@ -20,6 +20,7 @@ public final class MoneyModule extends Module {
     private final AmountWriter writer;
     private final FieldNames names;
     private final MonetaryAmountFormatFactory formatFactory;
+    private final LocaleProvider localeProvider;
     private final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory;
     private final FastMoneyFactory fastMoneyFactory;
     private final MoneyFactory moneyFactory;
@@ -27,7 +28,7 @@ public final class MoneyModule extends Module {
 
     public MoneyModule() {
         this(new DecimalAmountWriter(), FieldNames.defaults(), new NoopMonetaryAmountFormatFactory(),
-                new MoneyFactory(), new FastMoneyFactory(), new MoneyFactory(),
+                new MoneyFactory(), new FastMoneyFactory(), new DefaultLocaleProviderImpl(), new MoneyFactory(),
                 new RoundedMoneyFactory(Monetary.getDefaultRounding()));
     }
 
@@ -36,12 +37,14 @@ public final class MoneyModule extends Module {
             final MonetaryAmountFormatFactory formatFactory,
             final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
             final FastMoneyFactory fastMoneyFactory,
+            final LocaleProvider localeProvider,
             final MoneyFactory moneyFactory,
             final RoundedMoneyFactory roundedMoneyFactory) {
 
         this.writer = writer;
         this.names = names;
         this.formatFactory = formatFactory;
+        this.localeProvider = localeProvider;
         this.amountFactory = amountFactory;
         this.fastMoneyFactory = fastMoneyFactory;
         this.moneyFactory = moneyFactory;
@@ -64,7 +67,7 @@ public final class MoneyModule extends Module {
     public void setupModule(final SetupContext context) {
         final SimpleSerializers serializers = new SimpleSerializers();
         serializers.addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
-        serializers.addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(names, writer, formatFactory));
+        serializers.addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer(names, writer, formatFactory, localeProvider));
         context.addSerializers(serializers);
 
         final SimpleDeserializers deserializers = new SimpleDeserializers();
@@ -87,7 +90,7 @@ public final class MoneyModule extends Module {
 
     private MoneyModule withNumbers(final AmountWriter writer) {
         return new MoneyModule(writer, names, formatFactory, amountFactory,
-                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
+                fastMoneyFactory, localeProvider, moneyFactory, roundedMoneyFactory);
     }
 
     /**
@@ -121,12 +124,12 @@ public final class MoneyModule extends Module {
     public MoneyModule withRoundedMoney(final MonetaryOperator rounding) {
         final RoundedMoneyFactory factory = new RoundedMoneyFactory(rounding);
         return new MoneyModule(writer, names, formatFactory, factory,
-                fastMoneyFactory, moneyFactory, factory);
+                fastMoneyFactory, localeProvider, moneyFactory, factory);
     }
 
     public MoneyModule withMonetaryAmount(final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory) {
         return new MoneyModule(writer, names, formatFactory, amountFactory,
-                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
+                fastMoneyFactory, localeProvider, moneyFactory, roundedMoneyFactory);
     }
 
     public MoneyModule withoutFormatting() {
@@ -139,7 +142,12 @@ public final class MoneyModule extends Module {
 
     public MoneyModule withFormatting(final MonetaryAmountFormatFactory formatFactory) {
         return new MoneyModule(writer, names, formatFactory, amountFactory,
-                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
+                fastMoneyFactory, localeProvider, moneyFactory, roundedMoneyFactory);
+    }
+
+    public MoneyModule withLocaleProvider(final LocaleProvider localeProvider) {
+        return new MoneyModule(writer, names, formatFactory, amountFactory,
+                                fastMoneyFactory, localeProvider, moneyFactory, roundedMoneyFactory);
     }
 
     public MoneyModule withAmountFieldName(final String name) {
@@ -156,7 +164,7 @@ public final class MoneyModule extends Module {
 
     private MoneyModule withFieldNames(final FieldNames names) {
         return new MoneyModule(writer, names, formatFactory, amountFactory,
-                fastMoneyFactory, moneyFactory, roundedMoneyFactory);
+                fastMoneyFactory, localeProvider, moneyFactory, roundedMoneyFactory);
     }
 
 }
