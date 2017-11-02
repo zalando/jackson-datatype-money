@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.Value;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
@@ -223,6 +224,21 @@ public final class MonetaryAmountSerializerTest {
         final ObjectMapper unit = unit(module()).enableDefaultTyping();
 
         final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}";
+        final String actual = unit.writeValueAsString(new Price(amount));
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldSerializeWithCorrectLocale() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module().withDefaultFormatting().withLocaleProvider(new LocaleProvider() {
+            @Override
+            public Locale getCurrentLocale(SerializerProvider serializerProvider) {
+                return Locale.UK;
+            }
+        })).enableDefaultTyping();
+
+        final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"EUR29.95\"}}";
         final String actual = unit.writeValueAsString(new Price(amount));
 
         assertThat(actual, is(expected));

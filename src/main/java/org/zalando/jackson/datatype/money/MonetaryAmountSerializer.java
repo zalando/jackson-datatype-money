@@ -17,12 +17,14 @@ final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
     private final FieldNames names;
     private final AmountWriter writer;
     private final MonetaryAmountFormatFactory factory;
+    private final LocaleProvider localeProvider;
 
     MonetaryAmountSerializer(final FieldNames names, final AmountWriter writer,
-            final MonetaryAmountFormatFactory factory) {
+            final MonetaryAmountFormatFactory factory, final LocaleProvider localeProvider) {
         this.writer = writer;
         this.factory = factory;
         this.names = names;
+        this.localeProvider = localeProvider;
     }
 
     @Override
@@ -54,7 +56,7 @@ final class MonetaryAmountSerializer extends JsonSerializer<MonetaryAmount> {
 
     @Nullable
     private String format(final MonetaryAmount value, final SerializerProvider provider) {
-        final Locale locale = provider.getConfig().getLocale();
+        final Locale locale = this.localeProvider.getCurrentLocale(provider);
         final MonetaryAmountFormat format = factory.create(locale);
         return format == null ? null : format.format(value);
     }
