@@ -2,8 +2,10 @@ package org.zalando.jackson.datatype.money;
 
 import javax.money.MonetaryAmount;
 
-interface AmountWriter {
+interface AmountWriter<T> {
 
-    Object write(final MonetaryAmount amount);
+    Class<T> getType();
+
+    T write(final MonetaryAmount amount);
 
 }
