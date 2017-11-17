@@ -23,7 +23,9 @@ public final class CurrencyUnitSerializer extends StdSerializer<CurrencyUnit> {
     }
 
     @Override
-    public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException {
-        visitor.expectStringFormat(typeHint);
+    public void acceptJsonFormatVisitor(final JsonFormatVisitorWrapper visitor, final JavaType hint)
+            throws JsonMappingException {
+        visitor.expectStringFormat(hint);
     }
+
 }

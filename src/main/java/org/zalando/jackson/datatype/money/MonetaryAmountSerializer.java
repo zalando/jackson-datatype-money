@@ -32,20 +32,22 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
     }
 
     @Override
-    public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException {
-        JsonObjectFormatVisitor jsonObjectFormatVisitor = visitor.expectObjectFormat(typeHint);
+    public void acceptJsonFormatVisitor(final JsonFormatVisitorWrapper wrapper, final JavaType hint)
+            throws JsonMappingException {
 
-        JavaType amountType = visitor.getProvider().constructType(writer.getType());
-        JsonSerializer<Object> amountSerializer = visitor.getProvider().findValueSerializer(writer.getType());
-        jsonObjectFormatVisitor.property(names.getAmount(), amountSerializer, amountType);
+        final JsonObjectFormatVisitor visitor = wrapper.expectObjectFormat(hint);
 
-        JavaType currencyUnitType = visitor.getProvider().constructType(CurrencyUnit.class);
-        JsonSerializer<Object> currencyUnitSerializer = visitor.getProvider().findValueSerializer(CurrencyUnit.class);
-        jsonObjectFormatVisitor.property(names.getCurrency(), currencyUnitSerializer, currencyUnitType);
+        visitor.property(names.getAmount(),
+                wrapper.getProvider().findValueSerializer(writer.getType()),
+                wrapper.getProvider().constructType(writer.getType()));
 
-        JavaType stringType = visitor.getProvider().constructType(String.class);
-        JsonSerializer<Object> stringSerializer = visitor.getProvider().findValueSerializer(String.class);
-        jsonObjectFormatVisitor.optionalProperty(names.getFormatted(), stringSerializer, stringType);
+        visitor.property(names.getCurrency(),
+                wrapper.getProvider().findValueSerializer(CurrencyUnit.class),
+                wrapper.getProvider().constructType(CurrencyUnit.class));
+
+        visitor.optionalProperty(names.getFormatted(),
+                wrapper.getProvider().findValueSerializer(String.class),
+                wrapper.getProvider().constructType(String.class));
     }
 
     @Override
