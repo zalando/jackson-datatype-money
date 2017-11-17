@@ -4,7 +4,12 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-final class DecimalAmountWriter implements AmountWriter {
+final class DecimalAmountWriter implements AmountWriter<BigDecimal> {
+
+    @Override
+    public Class<BigDecimal> getType() {
+        return BigDecimal.class;
+    }
 
     @Override
     public BigDecimal write(final MonetaryAmount amount) {

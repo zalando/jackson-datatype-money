@@ -108,6 +108,12 @@
             <version>2.8.47</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jsonSchema</artifactId>
+            <scope>test</scope>
+            <version>${jackson.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
