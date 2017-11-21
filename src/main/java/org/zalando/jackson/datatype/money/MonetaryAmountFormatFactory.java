@@ -7,6 +7,6 @@ import java.util.Locale;
 public interface MonetaryAmountFormatFactory {
 
     @Nullable
-    MonetaryAmountFormat create(final Locale locale);
+    MonetaryAmountFormat create(final Locale defaultLocale);
 
 }

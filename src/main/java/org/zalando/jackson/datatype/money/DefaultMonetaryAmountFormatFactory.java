@@ -10,8 +10,8 @@ import java.util.Locale;
 final class DefaultMonetaryAmountFormatFactory implements MonetaryAmountFormatFactory {
 
     @Override
-    public MonetaryAmountFormat create(final Locale locale) {
-        return MonetaryFormats.getAmountFormat(locale);
+    public MonetaryAmountFormat create(final Locale defaultLocale) {
+        return MonetaryFormats.getAmountFormat(defaultLocale);
     }
     
 }
