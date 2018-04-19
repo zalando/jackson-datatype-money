@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
+import org.apiguardian.api.API;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
@@ -15,6 +16,9 @@ import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
 import java.util.Currency;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
+@API(status = STABLE)
 public final class MoneyModule extends Module {
 
     private final AmountWriter writer;
