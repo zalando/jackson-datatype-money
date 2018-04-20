@@ -4,11 +4,16 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
+import org.apiguardian.api.API;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.io.IOException;
 
+import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.STABLE;
+
+@API(status = MAINTAINED)
 public final class CurrencyUnitDeserializer extends JsonDeserializer<CurrencyUnit> {
 
     @Override

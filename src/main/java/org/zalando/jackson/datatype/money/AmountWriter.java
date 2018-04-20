@@ -6,6 +6,6 @@ interface AmountWriter<T> {
 
     Class<T> getType();
 
-    T write(final MonetaryAmount amount);
+    T write(MonetaryAmount amount);
 
 }
