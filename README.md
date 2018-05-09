@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/zalando/jackson-datatype-money/master.svg)](https://travis-ci.org/zalando/jackson-datatype-money)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datatype-money/master.svg)](https://coveralls.io/r/zalando/jackson-datatype-money)
+[![Code Quality](https://img.shields.io/codacy/grade/7fdac4ae509b403eb837b246e288856f/master.svg)](https://www.codacy.com/app/whiskeysierra/jackson-datatype-money)
 [![Javadoc](http://javadoc.io/badge/org.zalando/jackson-datatype-money.svg)](http://www.javadoc.io/doc/org.zalando/jackson-datatype-money)
 [![Release](https://img.shields.io/github/release/zalando/jackson-datatype-money.svg)](https://github.com/zalando/jackson-datatype-money/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/jackson-datatype-money.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/jackson-datatype-money)
