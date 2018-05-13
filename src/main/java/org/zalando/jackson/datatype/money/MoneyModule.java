@@ -14,7 +14,6 @@ import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
-import java.util.Currency;
 
 import static org.apiguardian.api.API.Status.STABLE;
 

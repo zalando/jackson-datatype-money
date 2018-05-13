@@ -11,7 +11,6 @@ import javax.money.Monetary;
 import java.io.IOException;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
-import static org.apiguardian.api.API.Status.STABLE;
 
 @API(status = MAINTAINED)
 public final class CurrencyUnitDeserializer extends JsonDeserializer<CurrencyUnit> {
