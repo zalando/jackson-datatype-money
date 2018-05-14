@@ -372,6 +372,7 @@
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta</artifactId>
                     <version>${moneta.version}</version>
+                    <type>pom</type>
                 </dependency>
             </dependencies>
         </profile>
