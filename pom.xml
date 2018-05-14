@@ -57,8 +57,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <money-api.version>1.0.3</money-api.version>
-        <moneta.version>1.2</moneta.version>
         <jackson.version>2.9.5</jackson.version>
     </properties>
 
@@ -351,12 +349,12 @@
                 <dependency>
                     <groupId>javax.money</groupId>
                     <artifactId>money-api-bp</artifactId>
-                    <version>${money-api.version}</version>
+                    <version>1.0.3</version>
                 </dependency>
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta-bp</artifactId>
-                    <version>${moneta.version}</version>
+                    <version>1.2</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -369,12 +367,12 @@
                 <dependency>
                     <groupId>javax.money</groupId>
                     <artifactId>money-api</artifactId>
-                    <version>${money-api.version}</version>
+                    <version>1.0.3</version>
                 </dependency>
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta</artifactId>
-                    <version>${moneta.version}</version>
+                    <version>1.2.1</version>
                     <type>pom</type>
                 </dependency>
             </dependencies>
