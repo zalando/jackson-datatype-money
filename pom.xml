@@ -58,7 +58,7 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <money-api.version>1.0.3</money-api.version>
-        <moneta.version>1.1</moneta.version>
+        <moneta.version>1.2</moneta.version>
         <jackson.version>2.9.5</jackson.version>
     </properties>
 
