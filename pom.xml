@@ -155,7 +155,8 @@
             <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
-                <version>1.3.0</version>
+                <!-- 1.3.0 requires java 8 or higher -->
+                <version>1.2.1</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
