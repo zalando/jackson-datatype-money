@@ -216,4 +216,4 @@ If you have questions, concerns, bug reports, etc, please file an issue in this 
 To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change.
 Please note that we aim to keep this project straightforward and focused. We are not looking to add lots of features;
 we just want it to keep doing what it does, as well and as powerfully as possible. For more details check the
-[contribution guidelines](CONTRIBUTING.md).
+[contribution guidelines](.github/CONTRIBUTING.md).
