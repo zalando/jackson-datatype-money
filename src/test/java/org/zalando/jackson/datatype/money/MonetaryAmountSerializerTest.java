@@ -16,6 +16,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import javax.money.MonetaryAmount;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -150,6 +151,26 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
+    public void shouldSerializeAmountAsDecimalWithLowerNumberOfFractionDigits() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module().withNumbers(new AmountWriter<BigDecimal>() {
+            @Override
+            public Class<BigDecimal> getType() {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public BigDecimal write(final MonetaryAmount amount) {
+                return amount.getNumber().numberValueExact(BigDecimal.class).stripTrailingZeros();
+            }
+        }));
+
+        final String expected = "{\"amount\":1E+2,\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(hundred);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
     public void shouldSerializeAmountAsQuotedDecimal() throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withQuotedDecimalNumbers());
 
@@ -175,6 +196,26 @@ public final class MonetaryAmountSerializerTest {
 
         final String expected = "{\"amount\":\"0.0001\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(fractions);
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldSerializeAmountAsQuotedDecimalWithLowerNumberOfFractionDigits() throws JsonProcessingException {
+        final ObjectMapper unit = unit(module().withNumbers(new AmountWriter<String>() {
+            @Override
+            public Class<String> getType() {
+                return String.class;
+            }
+
+            @Override
+            public String write(final MonetaryAmount amount) {
+                return amount.getNumber().numberValueExact(BigDecimal.class).stripTrailingZeros().toPlainString();
+            }
+        }));
+
+        final String expected = "{\"amount\":\"100\",\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(hundred);
 
         assertThat(actual, is(expected));
     }

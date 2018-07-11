@@ -14,7 +14,9 @@ import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
+import javax.money.MonetaryRounding;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 @API(status = STABLE)
@@ -88,14 +90,15 @@ public final class MoneyModule extends Module {
         return withNumbers(new QuotedDecimalAmountWriter());
     }
 
-    private MoneyModule withNumbers(final AmountWriter writer) {
+    @API(status = EXPERIMENTAL)
+    public MoneyModule withNumbers(final AmountWriter writer) {
         return new MoneyModule(writer, names, formatFactory, amountFactory,
                 fastMoneyFactory, moneyFactory, roundedMoneyFactory);
     }
 
     /**
      * @see FastMoney
-     * @return
+     * @return new {@link MoneyModule} using {@link FastMoney}
      */
     public MoneyModule withFastMoney() {
         return withMonetaryAmount(fastMoneyFactory);
@@ -103,7 +106,7 @@ public final class MoneyModule extends Module {
 
     /**
      * @see Money
-     * @return
+     * @return new {@link MoneyModule} using {@link Money}
      */
     public MoneyModule withMoney() {
         return withMonetaryAmount(moneyFactory);
@@ -111,7 +114,7 @@ public final class MoneyModule extends Module {
 
     /**
      * @see RoundedMoney
-     * @return
+     * @return new {@link MoneyModule} using {@link RoundedMoney}
      */
     public MoneyModule withRoundedMoney() {
         return withMonetaryAmount(roundedMoneyFactory);
@@ -119,7 +122,7 @@ public final class MoneyModule extends Module {
 
     /**
      * @see RoundedMoney
-     * @return
+     * @return new {@link MoneyModule} using {@link RoundedMoney} with the given {@link MonetaryRounding}
      */
     public MoneyModule withRoundedMoney(final MonetaryOperator rounding) {
         final RoundedMoneyFactory factory = new RoundedMoneyFactory(rounding);
