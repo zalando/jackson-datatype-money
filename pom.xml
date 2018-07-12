@@ -28,18 +28,6 @@
 
     <developers>
         <developer>
-            <name>Jan Matusewitcz</name>
-            <email>jan.matusewicz@zalando.de</email>
-            <organization>Zalando SE</organization>
-            <organizationUrl>https://tech.zalando.com/</organizationUrl>
-        </developer>
-        <developer>
-            <name>Lukas Niemeier</name>
-            <email>lukas.niemeier@zalando.de</email>
-            <organization>Zalando SE</organization>
-            <organizationUrl>https://tech.zalando.com/</organizationUrl>
-        </developer>
-        <developer>
             <name>Willi Schönborn</name>
             <email>willi.schoenborn@zalando.de</email>
             <organization>Zalando SE</organization>
