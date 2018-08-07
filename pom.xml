@@ -28,18 +28,6 @@
 
     <developers>
         <developer>
-            <name>Jan Matusewitcz</name>
-            <email>jan.matusewicz@zalando.de</email>
-            <organization>Zalando SE</organization>
-            <organizationUrl>https://tech.zalando.com/</organizationUrl>
-        </developer>
-        <developer>
-            <name>Lukas Niemeier</name>
-            <email>lukas.niemeier@zalando.de</email>
-            <organization>Zalando SE</organization>
-            <organizationUrl>https://tech.zalando.com/</organizationUrl>
-        </developer>
-        <developer>
             <name>Willi Schönborn</name>
             <email>willi.schoenborn@zalando.de</email>
             <organization>Zalando SE</organization>
@@ -80,7 +68,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.0</version>
+            <version>1.18.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -104,7 +92,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.19.0</version>
+            <version>2.21.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -140,7 +128,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>3.2.1</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -183,7 +171,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <configuration>
                     <compilerArgs>
                         <compilerArg>-Xlint:unchecked,deprecation</compilerArg>
@@ -346,7 +334,7 @@
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta-bp</artifactId>
-                    <version>1.2</version>
+                    <version>1.3</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -364,7 +352,7 @@
                 <dependency>
                     <groupId>org.javamoney</groupId>
                     <artifactId>moneta</artifactId>
-                    <version>1.2.1</version>
+                    <version>1.3</version>
                     <type>pom</type>
                 </dependency>
             </dependencies>
