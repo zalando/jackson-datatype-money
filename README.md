@@ -1,5 +1,6 @@
 # Jackson Datatype Money
 
+[![Stability: Sustained](https://masterminds.github.io/stability/sustained.svg)](https://masterminds.github.io/stability/sustained.html)
 [![Build Status](https://img.shields.io/travis/zalando/jackson-datatype-money/master.svg)](https://travis-ci.org/zalando/jackson-datatype-money)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datatype-money/master.svg)](https://coveralls.io/r/zalando/jackson-datatype-money)
 [![Code Quality](https://img.shields.io/codacy/grade/7fdac4ae509b403eb837b246e288856f/master.svg)](https://www.codacy.com/app/whiskeysierra/jackson-datatype-money)
