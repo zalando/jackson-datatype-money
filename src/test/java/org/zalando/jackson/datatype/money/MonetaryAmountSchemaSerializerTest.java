@@ -1,5 +1,6 @@
 package org.zalando.jackson.datatype.money;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -53,6 +54,26 @@ public final class MonetaryAmountSchemaSerializerTest {
                 "{\"amount\":{\"type\":\"string\",\"required\":true}," +
                 "\"currency\":{\"type\":\"string\",\"required\":true}," +
                 "\"formatted\":{\"type\":\"string\"}}}";
+
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldSerializeJsonSchemaWithMultipleMonetayAmountsAndAlternativeGenerator() throws Exception {
+        ObjectMapper unit = unit(module());
+
+        final com.kjetland.jackson.jsonSchema.JsonSchemaGenerator generator =
+                new com.kjetland.jackson.jsonSchema.JsonSchemaGenerator(unit);
+
+        final JsonNode jsonSchema = generator.generateJsonSchema(SchemaTestClass.class);
+
+        final String actual = unit.writeValueAsString(jsonSchema);
+        final String expected = "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Schema Test Class\"," +
+                "\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"moneyOne\":{\"$ref\":" +
+                "\"#/definitions/MonetaryAmount\"},\"moneyTwo\":{\"$ref\":\"#/definitions/MonetaryAmount\"}}," +
+                "\"definitions\":{\"MonetaryAmount\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\"" +
+                ":{\"amount\":{\"type\":\"number\"},\"currency\":{\"type\":\"string\"},\"formatted\":" +
+                "{\"type\":\"string\"}},\"required\":[\"amount\",\"currency\"]}}}";
 
         assertThat(actual, is(expected));
     }
