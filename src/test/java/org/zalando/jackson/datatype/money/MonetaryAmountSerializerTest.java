@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper;
+import com.fasterxml.jackson.databind.type.SimpleType;
 import lombok.Value;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
@@ -23,6 +25,8 @@ import java.util.Locale;
 import static javax.money.Monetary.getDefaultRounding;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 @RunWith(Parameterized.class)
 public final class MonetaryAmountSerializerTest {
@@ -267,6 +271,29 @@ public final class MonetaryAmountSerializerTest {
         final String actual = unit.writeValueAsString(new Price(amount));
 
         assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldHandleNullValueFromExpectObjectFormatInSchemaVisitor() throws JsonProcessingException {
+        final MonetaryAmountSerializer monetaryAmountSerializer = new MonetaryAmountSerializer(FieldNames.defaults(), new AmountWriter<BigDecimal>() {
+            @Override
+            public Class<BigDecimal> getType() {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public BigDecimal write(final MonetaryAmount amount) {
+                return amount.getNumber().numberValueExact(BigDecimal.class).stripTrailingZeros();
+            }
+        }, new NoopMonetaryAmountFormatFactory());
+
+        final JsonFormatVisitorWrapper jsonFormatVisitorWrapperMock = mock(JsonFormatVisitorWrapper.class);
+
+        try {
+            monetaryAmountSerializer.acceptJsonFormatVisitor(jsonFormatVisitorWrapperMock, SimpleType.constructUnsafe(javax.money.MonetaryAmount.class));
+        } catch (NullPointerException ex) {
+            fail();
+        }
     }
 
 }
