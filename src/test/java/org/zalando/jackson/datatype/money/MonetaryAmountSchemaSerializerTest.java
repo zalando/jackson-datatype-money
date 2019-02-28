@@ -1,5 +1,6 @@
 package org.zalando.jackson.datatype.money;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -10,6 +11,7 @@ import javax.money.MonetaryAmount;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public final class MonetaryAmountSchemaSerializerTest {
 
@@ -55,6 +57,30 @@ public final class MonetaryAmountSchemaSerializerTest {
                 "\"formatted\":{\"type\":\"string\"}}}";
 
         assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldSerializeJsonSchemaWithMultipleMonetayAmountsAndAlternativeGenerator() throws Exception {
+        try {
+            ObjectMapper unit = unit(module());
+            final com.kjetland.jackson.jsonSchema.JsonSchemaGenerator generator =
+                    new com.kjetland.jackson.jsonSchema.JsonSchemaGenerator(unit);
+
+            final JsonNode jsonSchema = generator.generateJsonSchema(SchemaTestClass.class);
+
+            final String actual = unit.writeValueAsString(jsonSchema);
+            final String expected = "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Schema Test Class\"," +
+                    "\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"moneyOne\":{\"$ref\":" +
+                    "\"#/definitions/MonetaryAmount\"},\"moneyTwo\":{\"$ref\":\"#/definitions/MonetaryAmount\"}}," +
+                    "\"definitions\":{\"MonetaryAmount\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\"" +
+                    ":{\"amount\":{\"type\":\"number\"},\"currency\":{\"type\":\"string\"},\"formatted\":" +
+                    "{\"type\":\"string\"}},\"required\":[\"amount\",\"currency\"]}}}";
+
+            assertThat(actual, is(expected));
+
+        } catch (UnsupportedClassVersionError e) {
+            assertTrue("This library only supports Java8", true);
+        }
     }
 
     private ObjectMapper unit(final Module module) {
