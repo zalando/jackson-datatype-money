@@ -45,7 +45,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <jackson.version>2.9.6</jackson.version>
+        <jackson.version>2.9.8</jackson.version>
     </properties>
 
     <dependencies>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.2</version>
+            <version>1.18.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.21.0</version>
+            <version>2.24.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -100,6 +100,18 @@
             <artifactId>jackson-module-jsonSchema</artifactId>
             <scope>test</scope>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kjetland</groupId>
+            <artifactId>mbknor-jackson-jsonschema_2.12</artifactId>
+            <version>1.0.33</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -128,7 +140,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>3.3.1</version>
+                <version>3.3.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -138,6 +150,9 @@
                 </executions>
                 <configuration>
                     <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                    <suppressionFiles>
+                        <suppressionFile>cve-suppressions.xml</suppressionFile>
+                    </suppressionFiles>
                 </configuration>
             </plugin>
             <plugin>
@@ -155,6 +170,7 @@
                             <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
                             <ignoredClassPatterns>
                                 <ignoredClassPattern>module-info</ignoredClassPattern>
+                                <ignoredClassPattern>.*\.module-info</ignoredClassPattern>
                             </ignoredClassPatterns>
                             <ignoredResourcePatterns>
                                 <ignoredResourcePattern>.*</ignoredResourcePattern>
@@ -182,7 +198,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>2.22.1</version>
                 <configuration>
                     <parallel>classesAndMethods</parallel>
                     <threadCount>1</threadCount>
@@ -193,7 +209,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.1</version>
+                <version>0.8.3</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -242,7 +258,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.7</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>

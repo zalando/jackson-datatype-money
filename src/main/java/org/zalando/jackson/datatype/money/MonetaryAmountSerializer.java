@@ -35,6 +35,7 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
             throws JsonMappingException {
 
         final JsonObjectFormatVisitor visitor = wrapper.expectObjectFormat(hint);
+        if(visitor == null) return;
 
         visitor.property(names.getAmount(),
                 wrapper.getProvider().findValueSerializer(writer.getType()),
