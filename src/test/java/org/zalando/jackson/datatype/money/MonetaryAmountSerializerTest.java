@@ -25,6 +25,7 @@ import java.util.Locale;
 import static javax.money.Monetary.getDefaultRounding;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @RunWith(Parameterized.class)
@@ -286,8 +287,12 @@ public final class MonetaryAmountSerializerTest {
             }
         }, new NoopMonetaryAmountFormatFactory());
 
-        final JsonFormatVisitorWrapper jsonFormatVisitorWrapperMock = mock(JsonFormatVisitorWrapper.class);
-        monetaryAmountSerializer.acceptJsonFormatVisitor(jsonFormatVisitorWrapperMock, SimpleType.constructUnsafe(javax.money.MonetaryAmount.class));
+        try {
+            final JsonFormatVisitorWrapper jsonFormatVisitorWrapperMock = mock(JsonFormatVisitorWrapper.class);
+            monetaryAmountSerializer.acceptJsonFormatVisitor(jsonFormatVisitorWrapperMock, SimpleType.constructUnsafe(javax.money.MonetaryAmount.class));
+        }catch (UnsupportedClassVersionError e){
+            assertTrue("This library only supports Java8", true);
+        }
     }
 
 }
