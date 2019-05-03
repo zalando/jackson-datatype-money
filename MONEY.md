@@ -2,7 +2,7 @@
 
 > A large proportion of the computers in this world manipulate money, so it's always puzzled me that money isn't actually a first class data type in any mainstream programming language.
 >
-> [Marting Fowler](https://martinfowler.com/eaaCatalog/money.html)
+> [Martin Fowler](https://martinfowler.com/eaaCatalog/money.html)
 
 Unfortunately JSON is no different. This document tries to change that by proposing and comparing different styles to represent money, some inspired by external sources and some based on our own experience.
 
