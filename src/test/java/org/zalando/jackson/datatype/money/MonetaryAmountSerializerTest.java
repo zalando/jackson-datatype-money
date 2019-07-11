@@ -284,7 +284,7 @@ public final class MonetaryAmountSerializerTest {
             public BigDecimal write(final MonetaryAmount amount) {
                 return amount.getNumber().numberValueExact(BigDecimal.class).stripTrailingZeros();
             }
-        }, new NoopMonetaryAmountFormatFactory());
+        }, MonetaryAmountFormatFactory.NONE);
 
         final JsonFormatVisitorWrapper jsonFormatVisitorWrapperMock = mock(JsonFormatVisitorWrapper.class);
         monetaryAmountSerializer.acceptJsonFormatVisitor(jsonFormatVisitorWrapperMock, SimpleType.constructUnsafe(javax.money.MonetaryAmount.class));

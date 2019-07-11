@@ -33,7 +33,7 @@ This library reflects our API preferences for [representing monetary amounts in 
 - is unique and flexible
 
 ## Dependencies
-- Java 7 or higher
+- Java 8 or higher
 - Any build tool using Maven Central, or direct download
 - Jackson
 - JavaMoney
@@ -162,7 +162,7 @@ ObjectMapper mapper = new ObjectMapper()
         .withMonetaryAmount(new CustomMonetaryAmountFactory()));
 ```
 
-If you're using Java 8, you can also pass in a method reference:
+You can also pass in a method reference:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
