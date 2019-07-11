@@ -121,6 +121,7 @@ public final class MoneyModule extends Module {
 
     /**
      * @see RoundedMoney
+     * @param rounding the rounding operator
      * @return new {@link MoneyModule} using {@link RoundedMoney} with the given {@link MonetaryRounding}
      */
     public MoneyModule withRoundedMoney(final MonetaryOperator rounding) {
