@@ -7,12 +7,10 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
-import org.javamoney.moneta.spi.DefaultNumberValue;
 
 import javax.annotation.Nullable;
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
-import javax.money.NumberValue;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -40,7 +38,7 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
 
     @Override
     public M deserialize(final JsonParser parser, final DeserializationContext context) throws IOException {
-        NumberValue amount = null;
+        BigDecimal amount = null;
         CurrencyUnit currency = null;
 
         while (parser.nextToken() != JsonToken.END_OBJECT) {
@@ -49,7 +47,7 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
             parser.nextToken();
 
             if (field.equals(names.getAmount())) {
-                amount = DefaultNumberValue.of(context.readValue(parser, BigDecimal.class));
+                amount = context.readValue(parser, BigDecimal.class);
             } else if (field.equals(names.getCurrency())) {
                 currency = context.readValue(parser, CurrencyUnit.class);
             } else if (field.equals(names.getFormatted())) {
@@ -57,7 +55,7 @@ final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDes
                 continue;
             } else if (context.isEnabled(FAIL_ON_UNKNOWN_PROPERTIES)) {
                 throw UnrecognizedPropertyException.from(parser, MonetaryAmount.class, field,
-                        Arrays.<Object>asList(names.getAmount(), names.getCurrency(), names.getFormatted()));
+                        Arrays.asList(names.getAmount(), names.getCurrency(), names.getFormatted()));
             } else {
                 parser.skipChildren();
             }

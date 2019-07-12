@@ -11,10 +11,10 @@ import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
 
 import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
 import javax.money.MonetaryRounding;
+import javax.money.format.MonetaryFormats;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -22,27 +22,26 @@ import static org.apiguardian.api.API.Status.STABLE;
 @API(status = STABLE)
 public final class MoneyModule extends Module {
 
-    private final AmountWriter writer;
+    private final AmountWriter<?> writer;
     private final FieldNames names;
     private final MonetaryAmountFormatFactory formatFactory;
     private final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory;
-    private final FastMoneyFactory fastMoneyFactory;
-    private final MoneyFactory moneyFactory;
-    private final RoundedMoneyFactory roundedMoneyFactory;
+    private final MonetaryAmountFactory<FastMoney> fastMoneyFactory;
+    private final MonetaryAmountFactory<Money> moneyFactory;
+    private final MonetaryAmountFactory<RoundedMoney> roundedMoneyFactory;
 
     public MoneyModule() {
-        this(new DecimalAmountWriter(), FieldNames.defaults(), new NoopMonetaryAmountFormatFactory(),
-                new MoneyFactory(), new FastMoneyFactory(), new MoneyFactory(),
-                new RoundedMoneyFactory(Monetary.getDefaultRounding()));
+        this(new DecimalAmountWriter(), FieldNames.defaults(), MonetaryAmountFormatFactory.NONE,
+                Money::of, FastMoney::of, Money::of, RoundedMoney::of);
     }
 
-    private MoneyModule(final AmountWriter writer,
+    private MoneyModule(final AmountWriter<?> writer,
             final FieldNames names,
             final MonetaryAmountFormatFactory formatFactory,
             final MonetaryAmountFactory<? extends MonetaryAmount> amountFactory,
-            final FastMoneyFactory fastMoneyFactory,
-            final MoneyFactory moneyFactory,
-            final RoundedMoneyFactory roundedMoneyFactory) {
+            final MonetaryAmountFactory<FastMoney> fastMoneyFactory,
+            final MonetaryAmountFactory<Money> moneyFactory,
+            final MonetaryAmountFactory<RoundedMoney> roundedMoneyFactory) {
 
         this.writer = writer;
         this.names = names;
@@ -91,7 +90,7 @@ public final class MoneyModule extends Module {
     }
 
     @API(status = EXPERIMENTAL)
-    public MoneyModule withNumbers(final AmountWriter writer) {
+    public MoneyModule withNumbers(final AmountWriter<?> writer) {
         return new MoneyModule(writer, names, formatFactory, amountFactory,
                 fastMoneyFactory, moneyFactory, roundedMoneyFactory);
     }
@@ -122,10 +121,13 @@ public final class MoneyModule extends Module {
 
     /**
      * @see RoundedMoney
+     * @param rounding the rounding operator
      * @return new {@link MoneyModule} using {@link RoundedMoney} with the given {@link MonetaryRounding}
      */
     public MoneyModule withRoundedMoney(final MonetaryOperator rounding) {
-        final RoundedMoneyFactory factory = new RoundedMoneyFactory(rounding);
+        final MonetaryAmountFactory<RoundedMoney> factory = (amount, currency) ->
+                RoundedMoney.of(amount, currency, rounding);
+
         return new MoneyModule(writer, names, formatFactory, factory,
                 fastMoneyFactory, moneyFactory, factory);
     }
@@ -136,11 +138,11 @@ public final class MoneyModule extends Module {
     }
 
     public MoneyModule withoutFormatting() {
-        return withFormatting(new NoopMonetaryAmountFormatFactory());
+        return withFormatting(MonetaryAmountFormatFactory.NONE);
     }
 
     public MoneyModule withDefaultFormatting() {
-        return withFormatting(new DefaultMonetaryAmountFormatFactory());
+        return withFormatting(MonetaryFormats::getAmountFormat);
     }
 
     public MoneyModule withFormatting(final MonetaryAmountFormatFactory formatFactory) {

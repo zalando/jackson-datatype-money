@@ -1,15 +1,15 @@
 package org.zalando.jackson.datatype.money;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public final class FieldNamesTest {
+final class FieldNamesTest {
 
     @Test
-    public void shouldOptimizeWithMethods() {
+    void shouldOptimizeWithMethods() {
         final FieldNames expected = FieldNames.defaults();
         final FieldNames actual = expected
                 .withAmount(expected.getAmount())

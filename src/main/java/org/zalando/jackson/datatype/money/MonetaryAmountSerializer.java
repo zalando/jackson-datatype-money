@@ -19,10 +19,10 @@ import java.util.Locale;
 final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
 
     private final FieldNames names;
-    private final AmountWriter writer;
+    private final AmountWriter<?> writer;
     private final MonetaryAmountFormatFactory factory;
 
-    MonetaryAmountSerializer(final FieldNames names, final AmountWriter writer,
+    MonetaryAmountSerializer(final FieldNames names, final AmountWriter<?> writer,
             final MonetaryAmountFormatFactory factory) {
         super(MonetaryAmount.class);
         this.writer = writer;
@@ -34,20 +34,25 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
     public void acceptJsonFormatVisitor(final JsonFormatVisitorWrapper wrapper, final JavaType hint)
             throws JsonMappingException {
 
-        final JsonObjectFormatVisitor visitor = wrapper.expectObjectFormat(hint);
-        if(visitor == null) return;
+        @Nullable final JsonObjectFormatVisitor visitor = wrapper.expectObjectFormat(hint);
+
+        if (visitor == null) {
+            return;
+        }
+
+        final SerializerProvider provider = wrapper.getProvider();
 
         visitor.property(names.getAmount(),
-                wrapper.getProvider().findValueSerializer(writer.getType()),
-                wrapper.getProvider().constructType(writer.getType()));
+                provider.findValueSerializer(writer.getType()),
+                provider.constructType(writer.getType()));
 
         visitor.property(names.getCurrency(),
-                wrapper.getProvider().findValueSerializer(CurrencyUnit.class),
-                wrapper.getProvider().constructType(CurrencyUnit.class));
+                provider.findValueSerializer(CurrencyUnit.class),
+                provider.constructType(CurrencyUnit.class));
 
         visitor.optionalProperty(names.getFormatted(),
-                wrapper.getProvider().findValueSerializer(String.class),
-                wrapper.getProvider().constructType(String.class));
+                provider.findValueSerializer(String.class),
+                provider.constructType(String.class));
     }
 
     @Override
@@ -59,22 +64,22 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
     }
 
     @Override
-    public void serialize(final MonetaryAmount value, final JsonGenerator generator, final SerializerProvider provider)
+    public void serialize(final MonetaryAmount value, final JsonGenerator json, final SerializerProvider provider)
             throws IOException {
 
         final CurrencyUnit currency = value.getCurrency();
         @Nullable final String formatted = format(value, provider);
 
-        generator.writeStartObject();
+        json.writeStartObject();
         {
-            generator.writeObjectField(names.getAmount(), writer.write(value));
-            generator.writeObjectField(names.getCurrency(), currency);
+            json.writeObjectField(names.getAmount(), writer.write(value));
+            json.writeObjectField(names.getCurrency(), currency);
 
             if (formatted != null) {
-                generator.writeStringField(names.getFormatted(), formatted);
+                json.writeStringField(names.getFormatted(), formatted);
             }
         }
-        generator.writeEndObject();
+        json.writeEndObject();
     }
 
     @Nullable

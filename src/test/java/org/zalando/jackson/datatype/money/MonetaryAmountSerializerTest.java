@@ -11,10 +11,9 @@ import lombok.Value;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.money.MonetaryAmount;
 import java.io.IOException;
@@ -23,33 +22,31 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import static javax.money.Monetary.getDefaultRounding;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-@RunWith(Parameterized.class)
-public final class MonetaryAmountSerializerTest {
+final class MonetaryAmountSerializerTest {
 
-    private final MonetaryAmount amount;
-    private final MonetaryAmount hundred;
-    private final MonetaryAmount fractions;
-
-    public MonetaryAmountSerializerTest(final MonetaryAmount amount, final MonetaryAmount hundred,
-            final MonetaryAmount fractions) {
-        this.amount = amount;
-        this.hundred = hundred;
-        this.fractions = fractions;
+    static Iterable<MonetaryAmount> amounts() {
+        return Arrays.asList(
+                FastMoney.of(29.95, "EUR"),
+                Money.of(29.95, "EUR"),
+                RoundedMoney.of(29.95, "EUR", getDefaultRounding()));
     }
 
-    @Parameters(name = "{0}, {1}")
-    public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {FastMoney.of(29.95, "EUR"), FastMoney.of(100, "EUR"), FastMoney.of(0.0001, "EUR")},
-                {Money.of(29.95, "EUR"), Money.of(100, "EUR"), Money.of(0.0001, "EUR")},
-                {RoundedMoney.of(29.95, "EUR", getDefaultRounding()),
-                        RoundedMoney.of(100, "EUR", getDefaultRounding()),
-                        RoundedMoney.of(0.0001, "EUR", getDefaultRounding())},
-        });
+    static Iterable<MonetaryAmount> hundreds() {
+        return Arrays.asList(
+                FastMoney.of(100, "EUR"),
+                Money.of(100, "EUR"),
+                RoundedMoney.of(100, "EUR", getDefaultRounding()));
+    }
+
+    static Iterable<MonetaryAmount> fractions() {
+        return Arrays.asList(
+                FastMoney.of(0.0001, "EUR"),
+                Money.of(0.0001, "EUR"),
+                RoundedMoney.of(0.0001, "EUR", getDefaultRounding()));
     }
 
     private ObjectMapper unit() {
@@ -64,8 +61,9 @@ public final class MonetaryAmountSerializerTest {
         return new MoneyModule();
     }
 
-    @Test
-    public void shouldSerialize() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerialize(final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit();
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
@@ -74,8 +72,10 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeWithoutFormattedValueIfFactoryProducesNull() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithoutFormattedValueIfFactoryProducesNull(
+            final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withoutFormatting());
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
@@ -84,8 +84,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeWithFormattedGermanValue() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithFormattedGermanValue(final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit(new MoneyModule().withDefaultFormatting());
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"29,95 EUR\"}";
@@ -96,8 +97,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeWithFormattedAmericanValue() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithFormattedAmericanValue(final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withDefaultFormatting());
 
         final String expected = "{\"amount\":29.95,\"currency\":\"USD\",\"formatted\":\"USD29.95\"}";
@@ -108,8 +110,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeWithCustomName() throws IOException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithCustomName(final MonetaryAmount amount) throws IOException {
         final ObjectMapper unit = unit(module().withDefaultFormatting()
                 .withAmountFieldName("value")
                 .withCurrencyFieldName("unit")
@@ -123,8 +126,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsDecimal() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeAmountAsDecimal(final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withDecimalNumbers());
 
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
@@ -133,8 +137,10 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsDecimalWithDefaultFractionDigits() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("hundreds")
+    void shouldSerializeAmountAsDecimalWithDefaultFractionDigits(
+            final MonetaryAmount hundred) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withDecimalNumbers());
 
         final String expected = "{\"amount\":100.00,\"currency\":\"EUR\"}";
@@ -143,18 +149,22 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsDecimalWithHigherNumberOfFractionDigits() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("fractions")
+    void shouldSerializeAmountAsDecimalWithHigherNumberOfFractionDigits(
+            final MonetaryAmount fraction) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withDecimalNumbers());
 
         final String expected = "{\"amount\":0.0001,\"currency\":\"EUR\"}";
-        final String actual = unit.writeValueAsString(fractions);
+        final String actual = unit.writeValueAsString(fraction);
 
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsDecimalWithLowerNumberOfFractionDigits() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("hundreds")
+    void shouldSerializeAmountAsDecimalWithLowerNumberOfFractionDigits(
+            final MonetaryAmount hundred) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withNumbers(new AmountWriter<BigDecimal>() {
             @Override
             public Class<BigDecimal> getType() {
@@ -173,8 +183,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsQuotedDecimal() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeAmountAsQuotedDecimal(final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withQuotedDecimalNumbers());
 
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
@@ -183,8 +194,10 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsQuotedDecimalWithDefaultFractionDigits() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("hundreds")
+    void shouldSerializeAmountAsQuotedDecimalWithDefaultFractionDigits(
+            final MonetaryAmount hundred) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withQuotedDecimalNumbers());
 
         final String expected = "{\"amount\":\"100.00\",\"currency\":\"EUR\"}";
@@ -193,18 +206,22 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsQuotedDecimalWithHigherNumberOfFractionDigits() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("fractions")
+    void shouldSerializeAmountAsQuotedDecimalWithHigherNumberOfFractionDigits(
+            final MonetaryAmount fraction) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withQuotedDecimalNumbers());
 
         final String expected = "{\"amount\":\"0.0001\",\"currency\":\"EUR\"}";
-        final String actual = unit.writeValueAsString(fractions);
+        final String actual = unit.writeValueAsString(fraction);
 
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsQuotedDecimalWithLowerNumberOfFractionDigits() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("hundreds")
+    void shouldSerializeAmountAsQuotedDecimalWithLowerNumberOfFractionDigits(
+            final MonetaryAmount hundred) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withNumbers(new AmountWriter<String>() {
             @Override
             public Class<String> getType() {
@@ -223,8 +240,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldSerializeAmountAsQuotedDecimalPlainString() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("hundreds")
+    void shouldSerializeAmountAsQuotedDecimalPlainString(final MonetaryAmount hundred) throws JsonProcessingException {
         final ObjectMapper unit = unit(module().withQuotedDecimalNumbers());
         unit.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
 
@@ -234,8 +252,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldWriteNumbersAsStrings() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldWriteNumbersAsStrings(final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit(module());
         unit.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
 
@@ -245,8 +264,9 @@ public final class MonetaryAmountSerializerTest {
         assertThat(actual, is(expected));
     }
 
-    @Test
-    public void shouldWriteNumbersAsPlainStrings() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("hundreds")
+    void shouldWriteNumbersAsPlainStrings(final MonetaryAmount hundred) throws JsonProcessingException {
         final ObjectMapper unit = unit(module());
         unit.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
         unit.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
@@ -262,8 +282,9 @@ public final class MonetaryAmountSerializerTest {
         MonetaryAmount amount;
     }
 
-    @Test
-    public void shouldSerializeWithType() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithType(final MonetaryAmount amount) throws JsonProcessingException {
         final ObjectMapper unit = unit(module()).enableDefaultTyping();
 
         final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}";
@@ -273,21 +294,12 @@ public final class MonetaryAmountSerializerTest {
     }
 
     @Test
-    public void shouldHandleNullValueFromExpectObjectFormatInSchemaVisitor() throws Exception {
-        final MonetaryAmountSerializer monetaryAmountSerializer = new MonetaryAmountSerializer(FieldNames.defaults(), new AmountWriter<BigDecimal>() {
-            @Override
-            public Class<BigDecimal> getType() {
-                return BigDecimal.class;
-            }
+    void shouldHandleNullValueFromExpectObjectFormatInSchemaVisitor() throws Exception {
+        final MonetaryAmountSerializer unit = new MonetaryAmountSerializer(FieldNames.defaults(),
+                new DecimalAmountWriter(), MonetaryAmountFormatFactory.NONE);
 
-            @Override
-            public BigDecimal write(final MonetaryAmount amount) {
-                return amount.getNumber().numberValueExact(BigDecimal.class).stripTrailingZeros();
-            }
-        }, new NoopMonetaryAmountFormatFactory());
-
-        final JsonFormatVisitorWrapper jsonFormatVisitorWrapperMock = mock(JsonFormatVisitorWrapper.class);
-        monetaryAmountSerializer.acceptJsonFormatVisitor(jsonFormatVisitorWrapperMock, SimpleType.constructUnsafe(javax.money.MonetaryAmount.class));
+        final JsonFormatVisitorWrapper wrapper = mock(JsonFormatVisitorWrapper.class);
+        unit.acceptJsonFormatVisitor(wrapper, SimpleType.constructUnsafe(MonetaryAmount.class));
     }
 
 }
