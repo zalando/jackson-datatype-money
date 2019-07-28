@@ -1,6 +1,7 @@
 package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import org.javamoney.moneta.CurrencyUnitBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,7 @@ final class CurrencyUnitDeserializerTest {
 
     @Test
     void shouldDeserializeWithTyping() throws IOException {
-        unit.enableDefaultTyping();
+        unit.enableDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
 
         final CurrencyUnit actual = unit.readValue("\"EUR\"", CurrencyUnit.class);
         final CurrencyUnit expected = CurrencyUnitBuilder.of("EUR", "default").build();
