@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.type.SimpleType;
 import lombok.Value;
 import org.javamoney.moneta.FastMoney;
@@ -285,7 +286,7 @@ final class MonetaryAmountSerializerTest {
     @ParameterizedTest
     @MethodSource("amounts")
     void shouldSerializeWithType(final MonetaryAmount amount) throws JsonProcessingException {
-        final ObjectMapper unit = unit(module()).enableDefaultTyping();
+        final ObjectMapper unit = unit(module()).enableDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
 
         final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}";
         final String actual = unit.writeValueAsString(new Price(amount));

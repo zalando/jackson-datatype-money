@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import org.javamoney.moneta.FastMoney;
 import org.javamoney.moneta.Money;
 import org.javamoney.moneta.RoundedMoney;
@@ -253,7 +254,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     @MethodSource("data")
     void shouldDeserializeWithTypeInformation(final Class<M> type, final Configurer configurer) throws IOException {
         final ObjectMapper unit = unit(configurer)
-                .enableDefaultTypingAsProperty(DefaultTyping.OBJECT_AND_NON_CONCRETE, "type")
+                .enableDefaultTypingAsProperty(BasicPolymorphicTypeValidator.builder().build(), DefaultTyping.OBJECT_AND_NON_CONCRETE, "type")
                 .disable(FAIL_ON_UNKNOWN_PROPERTIES);
 
         final String content = "{\"type\":\"org.javamoney.moneta.Money\",\"amount\":29.95,\"currency\":\"EUR\"}";
@@ -266,7 +267,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     @ParameterizedTest
     @MethodSource("data")
     void shouldDeserializeWithoutTypeInformation(final Class<M> type, final Configurer configurer) throws IOException {
-        final ObjectMapper unit = unit(configurer).enableDefaultTyping();
+        final ObjectMapper unit = unit(configurer).enableDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final M amount = unit.readValue(content, type);
