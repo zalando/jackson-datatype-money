@@ -2,9 +2,11 @@ package org.zalando.jackson.datatype.money;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonWriteFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.type.SimpleType;
@@ -55,7 +57,16 @@ final class MonetaryAmountSerializerTest {
     }
 
     private ObjectMapper unit(final Module module) {
-        return new ObjectMapper().registerModule(module);
+        return build(module).build();
+    }
+
+    private JsonMapper.Builder build() {
+        return build(module());
+    }
+
+    private JsonMapper.Builder build(final Module module) {
+        return JsonMapper.builder()
+                .addModule(module);
     }
 
     private MoneyModule module() {
@@ -256,8 +267,9 @@ final class MonetaryAmountSerializerTest {
     @ParameterizedTest
     @MethodSource("amounts")
     void shouldWriteNumbersAsStrings(final MonetaryAmount amount) throws JsonProcessingException {
-        final ObjectMapper unit = unit(module());
-        unit.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
+        final ObjectMapper unit = build()
+                .enable(JsonWriteFeature.WRITE_NUMBERS_AS_STRINGS)
+                .build();
 
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
@@ -268,9 +280,10 @@ final class MonetaryAmountSerializerTest {
     @ParameterizedTest
     @MethodSource("hundreds")
     void shouldWriteNumbersAsPlainStrings(final MonetaryAmount hundred) throws JsonProcessingException {
-        final ObjectMapper unit = unit(module());
-        unit.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
-        unit.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
+        final ObjectMapper unit = build()
+                .enable(JsonWriteFeature.WRITE_NUMBERS_AS_STRINGS)
+                .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .build();
 
         final String expected = "{\"amount\":\"100.00\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(hundred);
@@ -286,7 +299,7 @@ final class MonetaryAmountSerializerTest {
     @ParameterizedTest
     @MethodSource("amounts")
     void shouldSerializeWithType(final MonetaryAmount amount) throws JsonProcessingException {
-        final ObjectMapper unit = unit(module()).enableDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
+        final ObjectMapper unit = unit(module()).activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
 
         final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}";
         final String actual = unit.writeValueAsString(new Price(amount));

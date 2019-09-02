@@ -33,7 +33,7 @@ final class CurrencyUnitDeserializerTest {
 
     @Test
     void shouldDeserializeWithTyping() throws IOException {
-        unit.enableDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
+        unit.activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
 
         final CurrencyUnit actual = unit.readValue("\"EUR\"", CurrencyUnit.class);
         final CurrencyUnit expected = CurrencyUnitBuilder.of("EUR", "default").build();
