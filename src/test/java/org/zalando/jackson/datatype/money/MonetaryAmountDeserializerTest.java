@@ -1,5 +1,6 @@
 package org.zalando.jackson.datatype.money;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
@@ -254,7 +255,10 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     @MethodSource("data")
     void shouldDeserializeWithTypeInformation(final Class<M> type, final Configurer configurer) throws IOException {
         final ObjectMapper unit = unit(configurer)
-                .enableDefaultTypingAsProperty(BasicPolymorphicTypeValidator.builder().build(), DefaultTyping.OBJECT_AND_NON_CONCRETE, "type")
+                .activateDefaultTyping(
+                        BasicPolymorphicTypeValidator.builder().build(),
+                        DefaultTyping.OBJECT_AND_NON_CONCRETE,
+                        JsonTypeInfo.As.EXISTING_PROPERTY)
                 .disable(FAIL_ON_UNKNOWN_PROPERTIES);
 
         final String content = "{\"type\":\"org.javamoney.moneta.Money\",\"amount\":29.95,\"currency\":\"EUR\"}";
@@ -267,7 +271,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
     @ParameterizedTest
     @MethodSource("data")
     void shouldDeserializeWithoutTypeInformation(final Class<M> type, final Configurer configurer) throws IOException {
-        final ObjectMapper unit = unit(configurer).enableDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
+        final ObjectMapper unit = unit(configurer).activateDefaultTyping(
+                BasicPolymorphicTypeValidator.builder().build());
 
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final M amount = unit.readValue(content, type);
