@@ -2,7 +2,7 @@ package org.zalando.jackson.datatype.money;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.experimental.Wither;
+import lombok.With;
 
 @AllArgsConstructor(staticName = "valueOf")
 @Getter
@@ -10,13 +10,13 @@ final class FieldNames {
 
     static final FieldNames DEFAULT = FieldNames.valueOf("amount", "currency", "formatted");
 
-    @Wither
+    @With
     private final String amount;
 
-    @Wither
+    @With
     private final String currency;
 
-    @Wither
+    @With
     private final String formatted;
 
     static FieldNames defaults() {
