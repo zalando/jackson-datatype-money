@@ -2,12 +2,12 @@
 
 [![Stability: Sustained](https://masterminds.github.io/stability/sustained.svg)](https://masterminds.github.io/stability/sustained.html)
 ![Build Status](https://github.com/zalando/jackson-datatype-money/workflows/build/badge.svg)
-[![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datatype-money/master.svg)](https://coveralls.io/r/zalando/jackson-datatype-money)
-[![Code Quality](https://img.shields.io/codacy/grade/7fdac4ae509b403eb837b246e288856f/master.svg)](https://www.codacy.com/app/whiskeysierra/jackson-datatype-money)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datatype-money/main.svg)](https://coveralls.io/r/zalando/jackson-datatype-money)
+[![Code Quality](https://img.shields.io/codacy/grade/7fdac4ae509b403eb837b246e288856f/main.svg)](https://www.codacy.com/app/whiskeysierra/jackson-datatype-money)
 [![Javadoc](http://javadoc.io/badge/org.zalando/jackson-datatype-money.svg)](http://www.javadoc.io/doc/org.zalando/jackson-datatype-money)
 [![Release](https://img.shields.io/github/release/zalando/jackson-datatype-money.svg)](https://github.com/zalando/jackson-datatype-money/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/jackson-datatype-money.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/jackson-datatype-money)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zalando/jackson-datatype-money/master/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zalando/jackson-datatype-money/main/LICENSE)
 
 
 *Jackson Datatype Money* is a [Jackson](https://github.com/codehaus/jackson) module to support JSON serialization and
