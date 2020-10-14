@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.money.CurrencyUnit;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 final class CurrencyUnitSchemaSerializerTest {
 
@@ -21,6 +20,6 @@ final class CurrencyUnitSchemaSerializerTest {
         final String actual = unit.writeValueAsString(jsonSchema);
         final String expected = "{\"type\":\"string\"}";
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 }

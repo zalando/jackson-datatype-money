@@ -25,8 +25,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import static javax.money.Monetary.getDefaultRounding;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 final class MonetaryAmountSerializerTest {
@@ -81,7 +80,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -93,7 +92,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -106,7 +105,7 @@ final class MonetaryAmountSerializerTest {
         final ObjectWriter writer = unit.writer().with(Locale.GERMANY);
         final String actual = writer.writeValueAsString(amount);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -119,7 +118,7 @@ final class MonetaryAmountSerializerTest {
         final ObjectWriter writer = unit.writer().with(Locale.US);
         final String actual = writer.writeValueAsString(amount.getFactory().setCurrency("USD").create());
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -135,7 +134,7 @@ final class MonetaryAmountSerializerTest {
         final ObjectWriter writer = unit.writer().with(Locale.GERMANY);
         final String actual = writer.writeValueAsString(amount);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -146,7 +145,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -158,7 +157,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":100.00,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(hundred);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -170,7 +169,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":0.0001,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(fraction);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -192,7 +191,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":1E+2,\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(hundred);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -203,7 +202,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -215,7 +214,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":\"100.00\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(hundred);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -227,7 +226,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":\"0.0001\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(fraction);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -249,7 +248,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":\"100\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(hundred);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -261,7 +260,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":\"100.00\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(hundred);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -274,7 +273,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":\"29.95\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(amount);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -288,11 +287,11 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":\"100.00\",\"currency\":\"EUR\"}";
         final String actual = unit.writeValueAsString(hundred);
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Value
-    private static final class Price {
+    private static class Price {
         MonetaryAmount amount;
     }
 
@@ -304,7 +303,7 @@ final class MonetaryAmountSerializerTest {
         final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}";
         final String actual = unit.writeValueAsString(new Price(amount));
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

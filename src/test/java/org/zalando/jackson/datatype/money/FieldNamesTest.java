@@ -2,9 +2,7 @@ package org.zalando.jackson.datatype.money;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 final class FieldNamesTest {
 
@@ -16,7 +14,7 @@ final class FieldNamesTest {
                 .withCurrency(expected.getCurrency())
                 .withFormatted(expected.getFormatted());
 
-        assertThat(actual, is(sameInstance(expected)));
+        assertThat(actual).isSameAs(expected);
     }
 
 }

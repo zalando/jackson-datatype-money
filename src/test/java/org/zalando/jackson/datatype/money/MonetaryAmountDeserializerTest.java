@@ -22,12 +22,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.startsWith;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
@@ -70,7 +65,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, MonetaryAmount.class);
 
-        assertThat(amount, is(instanceOf(Money.class)));
+        assertThat(amount).isInstanceOf(Money.class);
     }
 
     @ParameterizedTest
@@ -81,7 +76,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount, is(instanceOf(type)));
+        assertThat(amount).isInstanceOf(type);
     }
 
     @ParameterizedTest
@@ -92,8 +87,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
-        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class)).isEqualTo(new BigDecimal("29.95"));
+        assertThat(amount.getCurrency().getCurrencyCode()).isEqualTo("EUR");
     }
 
     @ParameterizedTest
@@ -105,8 +100,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.9501,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.9501")));
-        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class)).isEqualTo(new BigDecimal("29.9501"));
+        assertThat(amount.getCurrency().getCurrencyCode()).isEqualTo("EUR");
     }
 
     @ParameterizedTest
@@ -118,8 +113,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"currency\":\"EUR\",\"amount\":\"29.95\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
-        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class)).isEqualTo(new BigDecimal("29.95"));
+        assertThat(amount.getCurrency().getCurrencyCode()).isEqualTo(("EUR"));
     }
 
     @ParameterizedTest
@@ -131,8 +126,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"currency\":\"EUR\",\"amount\":29.95}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
-        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class)).isEqualTo((new BigDecimal("29.95")));
+        assertThat(amount.getCurrency().getCurrencyCode()).isEqualTo(("EUR"));
     }
 
     @ParameterizedTest
@@ -145,8 +140,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"value\":29.95,\"unit\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
-        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class)).isEqualTo((new BigDecimal("29.95")));
+        assertThat(amount.getCurrency().getCurrencyCode()).isEqualTo(("EUR"));
     }
 
     @ParameterizedTest
@@ -157,8 +152,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\",\"formatted\":\"30.00 EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount.getNumber().numberValueExact(BigDecimal.class), is(new BigDecimal("29.95")));
-        assertThat(amount.getCurrency().getCurrencyCode(), is("EUR"));
+        assertThat(amount.getNumber().numberValueExact(BigDecimal.class)).isEqualTo((new BigDecimal("29.95")));
+        assertThat(amount.getCurrency().getCurrencyCode()).isEqualTo(("EUR"));
     }
 
     @ParameterizedTest
@@ -170,7 +165,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final MonetaryAmount amount = unit.readValue(content, type);
 
-        assertThat(amount, is(notNullValue()));
+        assertThat(amount).isNotNull();
 
         // we need a json node to get a TreeTraversingParser with codec of type ObjectReader
         final JsonNode ownerNode =
@@ -181,8 +176,8 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
 
         // try to update
         final Owner result = unit.readerForUpdating(owner).readValue(ownerNode);
-        assertThat(result, is(notNullValue()));
-        assertThat(result.getValue(), is(amount));
+        assertThat(result).isNotNull();
+        assertThat(result.getValue()).isEqualTo((amount));
     }
 
     private static class Owner {
@@ -209,7 +204,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final JsonProcessingException exception = assertThrows(
                 JsonProcessingException.class, () -> unit.readValue(content, type));
 
-        assertThat(exception.getMessage(), containsString("Missing property: 'amount'"));
+        assertThat(exception.getMessage()).contains("Missing property: 'amount'");
     }
 
     @ParameterizedTest
@@ -222,7 +217,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final JsonProcessingException exception = assertThrows(
                 JsonProcessingException.class, () -> unit.readValue(content, type));
 
-        assertThat(exception.getMessage(), containsString("Missing property: 'currency'"));
+        assertThat(exception.getMessage()).contains("Missing property: 'currency'");
     }
 
     @ParameterizedTest
@@ -236,9 +231,9 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final JsonProcessingException exception = assertThrows(
                 UnrecognizedPropertyException.class, () -> unit.readValue(content, type));
 
-        assertThat(exception.getMessage(), startsWith(
+        assertThat(exception.getMessage()).startsWith(
                 "Unrecognized field \"version\" (class javax.money.MonetaryAmount), " +
-                        "not marked as ignorable (3 known properties: \"amount\", \"currency\", \"formatted\"])"));
+                        "not marked as ignorable (3 known properties: \"amount\", \"currency\", \"formatted\"])");
     }
 
     @ParameterizedTest
@@ -265,7 +260,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final M amount = unit.readValue(content, type);
 
         // type information is ignored?!
-        assertThat(amount, is(instanceOf(type)));
+        assertThat(amount).isInstanceOf(type);
     }
 
     @ParameterizedTest
@@ -277,7 +272,7 @@ final class MonetaryAmountDeserializerTest<M extends MonetaryAmount> {
         final String content = "{\"amount\":29.95,\"currency\":\"EUR\"}";
         final M amount = unit.readValue(content, type);
 
-        assertThat(amount, is(instanceOf(type)));
+        assertThat(amount).isInstanceOf(type);
     }
 
 }
