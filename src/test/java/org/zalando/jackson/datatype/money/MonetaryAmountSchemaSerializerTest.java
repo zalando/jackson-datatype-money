@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.money.MonetaryAmount;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 final class MonetaryAmountSchemaSerializerTest {
 
@@ -25,7 +24,7 @@ final class MonetaryAmountSchemaSerializerTest {
                 "\"currency\":{\"type\":\"string\",\"required\":true}," +
                 "\"formatted\":{\"type\":\"string\"}}}";
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -41,7 +40,7 @@ final class MonetaryAmountSchemaSerializerTest {
                 "\"unit\":{\"type\":\"string\",\"required\":true}," +
                 "\"pretty\":{\"type\":\"string\"}}}";
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -55,7 +54,7 @@ final class MonetaryAmountSchemaSerializerTest {
                 "\"currency\":{\"type\":\"string\",\"required\":true}," +
                 "\"formatted\":{\"type\":\"string\"}}}";
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -74,7 +73,7 @@ final class MonetaryAmountSchemaSerializerTest {
                 ":{\"amount\":{\"type\":\"number\"},\"currency\":{\"type\":\"string\"},\"formatted\":" +
                 "{\"type\":\"string\"}},\"required\":[\"amount\",\"currency\"]}}}";
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     private ObjectMapper unit(final Module module) {
@@ -84,4 +83,5 @@ final class MonetaryAmountSchemaSerializerTest {
     private MoneyModule module() {
         return new MoneyModule();
     }
+
 }

@@ -9,8 +9,7 @@ import javax.money.CurrencyUnit;
 import javax.money.UnknownCurrencyException;
 import java.io.IOException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 final class CurrencyUnitDeserializerTest {
@@ -22,7 +21,7 @@ final class CurrencyUnitDeserializerTest {
         final CurrencyUnit actual = unit.readValue("\"EUR\"", CurrencyUnit.class);
         final CurrencyUnit expected = CurrencyUnitBuilder.of("EUR", "default").build();
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -38,7 +37,7 @@ final class CurrencyUnitDeserializerTest {
         final CurrencyUnit actual = unit.readValue("\"EUR\"", CurrencyUnit.class);
         final CurrencyUnit expected = CurrencyUnitBuilder.of("EUR", "default").build();
 
-        assertThat(actual, is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
 }
