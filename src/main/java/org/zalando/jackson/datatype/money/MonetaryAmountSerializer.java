@@ -16,13 +16,13 @@ import javax.money.format.MonetaryAmountFormat;
 import java.io.IOException;
 import java.util.Locale;
 
-final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
+public final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
 
     private final FieldNames names;
     private final AmountWriter<?> writer;
     private final MonetaryAmountFormatFactory factory;
 
-    MonetaryAmountSerializer(final FieldNames names, final AmountWriter<?> writer,
+    public MonetaryAmountSerializer(final FieldNames names, final AmountWriter<?> writer,
             final MonetaryAmountFormatFactory factory) {
         super(MonetaryAmount.class);
         this.writer = writer;

@@ -3,7 +3,7 @@ package org.zalando.jackson.datatype.money;
 import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 
-final class QuotedDecimalAmountWriter implements AmountWriter<String> {
+public final class QuotedDecimalAmountWriter implements AmountWriter<String> {
 
     private final AmountWriter<BigDecimal> delegate = new DecimalAmountWriter();
 

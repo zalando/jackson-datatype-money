@@ -16,7 +16,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @API(status = MAINTAINED)
 public final class CurrencyUnitSerializer extends StdSerializer<CurrencyUnit> {
 
-    CurrencyUnitSerializer() {
+    public CurrencyUnitSerializer() {
         super(CurrencyUnit.class);
     }
 
