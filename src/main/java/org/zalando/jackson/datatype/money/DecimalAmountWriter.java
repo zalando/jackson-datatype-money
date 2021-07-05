@@ -5,7 +5,7 @@ import javax.money.MonetaryAmount;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-final class DecimalAmountWriter implements BigDecimalAmountWriter {
+public final class DecimalAmountWriter implements BigDecimalAmountWriter {
 
     @Override
     public BigDecimal write(@Nonnull final MonetaryAmount amount) {
