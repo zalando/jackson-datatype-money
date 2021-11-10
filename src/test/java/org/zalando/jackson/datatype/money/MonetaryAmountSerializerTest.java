@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.json.JsonWriteFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
@@ -313,6 +314,26 @@ final class MonetaryAmountSerializerTest {
 
         final JsonFormatVisitorWrapper wrapper = mock(JsonFormatVisitorWrapper.class);
         unit.acceptJsonFormatVisitor(wrapper, SimpleType.constructUnsafe(MonetaryAmount.class));
+    }
+
+    /**
+     * Fixes a bug that caused the amount field to be written as
+     * <code>
+     *  "amount": {"BigDecimal":12.34}
+     * </code>
+     * @param amount
+     * @throws JsonProcessingException
+     */
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithWrapRootValue(final MonetaryAmount amount) throws JsonProcessingException {
+        final ObjectMapper unit = unit(module())
+                .configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+
+        final String expected = "{\"Price\":{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}}";
+        final String actual = unit.writeValueAsString(new Price(amount));
+
+        assertThat(actual).isEqualTo(expected);
     }
 
 }

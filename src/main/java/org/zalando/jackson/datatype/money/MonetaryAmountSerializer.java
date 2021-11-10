@@ -72,7 +72,7 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
 
         json.writeStartObject();
         {
-            json.writeObjectField(names.getAmount(), writer.write(value));
+            provider.defaultSerializeField(names.getAmount(), writer.write(value), json);
             provider.defaultSerializeField(names.getCurrency(), currency, json);
 
             if (formatted != null) {
