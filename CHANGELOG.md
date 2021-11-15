@@ -2,11 +2,7 @@
 
 ## [Unreleased](https://github.com/zalando/jackson-datatype-money/tree/HEAD)
 
-[Full Changelog](https://github.com/zalando/jackson-datatype-money/compare/1.2.2...HEAD)
-
-**Closed issues:**
-
-- Integration with JSR-303 and Spring Validation [\#301](https://github.com/zalando/jackson-datatype-money/issues/301)
+[Full Changelog](https://github.com/zalando/jackson-datatype-money/compare/1.3.0...HEAD)
 
 **Merged pull requests:**
 
@@ -67,6 +63,14 @@
 - Bump assertj-core from 3.18.0 to 3.18.1 [\#264](https://github.com/zalando/jackson-datatype-money/pull/264) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump dependency-check-maven from 6.0.2 to 6.0.3 [\#263](https://github.com/zalando/jackson-datatype-money/pull/263) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Release/1.2.1 [\#262](https://github.com/zalando/jackson-datatype-money/pull/262) ([whiskeysierra](https://github.com/whiskeysierra))
+
+## [1.3.0](https://github.com/zalando/jackson-datatype-money/tree/1.3.0) (2021-11-15)
+
+[Full Changelog](https://github.com/zalando/jackson-datatype-money/compare/1.2.2...1.3.0)
+
+**Closed issues:**
+
+- Integration with JSR-303 and Spring Validation [\#301](https://github.com/zalando/jackson-datatype-money/issues/301)
 
 ## [1.2.2](https://github.com/zalando/jackson-datatype-money/tree/1.2.2) (2021-03-29)
 
