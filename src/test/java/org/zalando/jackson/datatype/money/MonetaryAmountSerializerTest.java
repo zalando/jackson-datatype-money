@@ -325,6 +325,23 @@ final class MonetaryAmountSerializerTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @Value
+    private static class PriceUnwrappedTransformedNames {
+        @JsonUnwrapped(prefix = "Price-", suffix = "-Field")
+        MonetaryAmount amount;
+    }
+
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithTypeUnwrappedAndNamesTransformed(final MonetaryAmount amount) throws JsonProcessingException {
+        final ObjectMapper unit = unit(module()).activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
+
+        final String expected = "{\"Price-amount-Field\":29.95,\"Price-currency-Field\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(new PriceUnwrappedTransformedNames(amount));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @Test
     void shouldHandleNullValueFromExpectObjectFormatInSchemaVisitor() throws Exception {
         final MonetaryAmountSerializer unit = new MonetaryAmountSerializer(FieldNames.defaults(),
