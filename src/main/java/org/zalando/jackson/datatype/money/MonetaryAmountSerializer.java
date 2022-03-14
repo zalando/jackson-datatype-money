@@ -23,20 +23,22 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
     private final FieldNames names;
     private final AmountWriter<?> writer;
     private final MonetaryAmountFormatFactory factory;
-    private final NameTransformer unwrappingNameTransformer;
+    private final boolean isUnwrapping;
+    private final NameTransformer nameTransformer;
 
     MonetaryAmountSerializer(final FieldNames names, final AmountWriter<?> writer,
-            final MonetaryAmountFormatFactory factory, @Nullable final NameTransformer unwrappingNameTransformer) {
+            final MonetaryAmountFormatFactory factory, boolean isUnwrapping, @Nullable final NameTransformer nameTransformer) {
         super(MonetaryAmount.class);
         this.writer = writer;
         this.factory = factory;
         this.names = names;
-        this.unwrappingNameTransformer = unwrappingNameTransformer;
+        this.isUnwrapping = isUnwrapping;
+        this.nameTransformer = nameTransformer;
     }
 
     MonetaryAmountSerializer(final FieldNames names, final AmountWriter<?> writer,
             final MonetaryAmountFormatFactory factory) {
-        this(names, writer, factory, null);
+        this(names, writer, factory, false, null);
     }
 
     @Override
@@ -79,7 +81,7 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
         final CurrencyUnit currency = value.getCurrency();
         @Nullable final String formatted = format(value, provider);
 
-        if (unwrappingNameTransformer == null) {
+        if (!isUnwrapping) {
             json.writeStartObject();
         }
 
@@ -92,13 +94,13 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
             }
         }
 
-        if (unwrappingNameTransformer == null) {
+        if (!isUnwrapping) {
             json.writeEndObject();
         }
     }
 
     private String transformName(String name) {
-        return (unwrappingNameTransformer != null) ? unwrappingNameTransformer.transform(name) : name;
+        return (nameTransformer != null) ? nameTransformer.transform(name) : name;
     }
 
     @Nullable
@@ -110,12 +112,11 @@ final class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
 
     @Override
     public boolean isUnwrappingSerializer() {
-        return unwrappingNameTransformer != null;
+        return isUnwrapping;
     }
 
     @Override
     public JsonSerializer<MonetaryAmount> unwrappingSerializer(@Nullable final NameTransformer nameTransformer) {
-        NameTransformer unwrappingNameTransformer = nameTransformer != null ? nameTransformer : NameTransformer.NOP;
-        return new MonetaryAmountSerializer(names, writer, factory, unwrappingNameTransformer);
+        return new MonetaryAmountSerializer(names, writer, factory, true, nameTransformer);
     }
 }
