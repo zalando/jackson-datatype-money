@@ -1,5 +1,6 @@
 package org.zalando.jackson.datatype.money;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.json.JsonWriteFeature;
@@ -303,6 +304,40 @@ final class MonetaryAmountSerializerTest {
 
         final String expected = "{\"amount\":{\"amount\":29.95,\"currency\":\"EUR\"}}";
         final String actual = unit.writeValueAsString(new Price(amount));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Value
+    private static class PriceUnwrapped {
+        @JsonUnwrapped
+        MonetaryAmount amount;
+    }
+
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithTypeUnwrapped(final MonetaryAmount amount) throws JsonProcessingException {
+        final ObjectMapper unit = unit(module()).activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
+
+        final String expected = "{\"amount\":29.95,\"currency\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(new PriceUnwrapped(amount));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Value
+    private static class PriceUnwrappedTransformedNames {
+        @JsonUnwrapped(prefix = "Price-", suffix = "-Field")
+        MonetaryAmount amount;
+    }
+
+    @ParameterizedTest
+    @MethodSource("amounts")
+    void shouldSerializeWithTypeUnwrappedAndNamesTransformed(final MonetaryAmount amount) throws JsonProcessingException {
+        final ObjectMapper unit = unit(module()).activateDefaultTyping(BasicPolymorphicTypeValidator.builder().build());
+
+        final String expected = "{\"Price-amount-Field\":29.95,\"Price-currency-Field\":\"EUR\"}";
+        final String actual = unit.writeValueAsString(new PriceUnwrappedTransformedNames(amount));
 
         assertThat(actual).isEqualTo(expected);
     }
