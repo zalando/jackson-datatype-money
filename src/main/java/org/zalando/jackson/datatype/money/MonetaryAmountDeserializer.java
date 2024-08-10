@@ -18,12 +18,12 @@ import java.util.Arrays;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static java.lang.String.format;
 
-final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDeserializer<M> {
+public final class MonetaryAmountDeserializer<M extends MonetaryAmount> extends JsonDeserializer<M> {
 
     private final MonetaryAmountFactory<M> factory;
     private final FieldNames names;
 
-    MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
+    public MonetaryAmountDeserializer(final MonetaryAmountFactory<M> factory, final FieldNames names) {
         this.factory = factory;
         this.names = names;
     }
