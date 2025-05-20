@@ -1,6 +1,6 @@
-# Jackson Datatype Money
+# Jackson Datatype Money [DEPRECATED]
 
-[![Stability: Sustained](https://masterminds.github.io/stability/sustained.svg)](https://masterminds.github.io/stability/sustained.html)
+[![Stability: Unsupported](https://masterminds.github.io/stability/unsupported.svg)](https://masterminds.github.io/stability/sustained.html)
 ![Build Status](https://github.com/zalando/jackson-datatype-money/workflows/build/badge.svg)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/jackson-datatype-money/main.svg)](https://coveralls.io/r/zalando/jackson-datatype-money)
 [![Code Quality](https://img.shields.io/codacy/grade/7fdac4ae509b403eb837b246e288856f/main.svg)](https://www.codacy.com/app/whiskeysierra/jackson-datatype-money)
@@ -24,6 +24,14 @@ This library reflects our API preferences for [representing monetary amounts in 
 }
 ```
 
+## Deprecation Notice
+This project is deprecated and no longer maintained.
+Please use the Jackson Datatype modules for [javax-money](https://github.com/FasterXML/jackson-datatypes-misc/tree/2.x/javax-money) and [moneta](https://github.com/FasterXML/jackson-datatypes-misc/tree/2.x/moneta).
+
+Specifically [MonetaMoneyModule](https://github.com/FasterXML/jackson-datatypes-misc/blob/2.x/moneta/src/main/java/com/fasterxml/jackson/datatype/moneta/MonetaMoneyModule.java) is a drop-in replacement for this module. It supports all the same features and is actively maintained.
+
+
+
 ## Features
 - enables you to express monetary amounts in JSON
 - can be used in a REST APIs
@@ -44,9 +52,9 @@ Add the following dependency to your project:
 
 ```xml
 <dependency>
-    <groupId>org.zalando</groupId>
-    <artifactId>jackson-datatype-money</artifactId>
-    <version>${jackson-datatype-money.version}</version>
+ <groupId>org.zalando</groupId>
+ <artifactId>jackson-datatype-money</artifactId>
+ <version>${jackson-datatype-money.version}</version>
 </dependency>
 ```
 For ultimate flexibility, this module is compatible with the official version as well as the backport of JavaMoney. The actual version will be selected by a profile based on the current JDK version.
@@ -57,14 +65,14 @@ Register the module with your `ObjectMapper`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule());
+        .registerModule(new MoneyModule());
 ```
 
 Alternatively, you can use the SPI capabilities:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .findAndRegisterModules();
+        .findAndRegisterModules();
 ```
 
 ### Serialization
@@ -75,8 +83,8 @@ and will, by default, serialize it as:
 
 ```json
 {
-  "amount": 99.95,
-  "currency": "EUR"
+ "amount": 99.95,
+ "currency": "EUR"
 }
 ```
 
@@ -84,13 +92,13 @@ To serialize number as a JSON string, you have to configure the quoted decimal n
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule().withQuotedDecimalNumbers());
+        .registerModule(new MoneyModule().withQuotedDecimalNumbers());
 ```
 
 ```json
 {
-  "amount": "99.95",
-  "currency": "EUR"
+ "amount": "99.95",
+ "currency": "EUR"
 }
 ```
 
@@ -101,15 +109,15 @@ have to either enable default formatting:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule().withDefaultFormatting());
+        .registerModule(new MoneyModule().withDefaultFormatting());
 ```
 
 ... or pass in a `MonetaryAmountFormatFactory` implementation to the `MoneyModule`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule()
-        .withFormatting(new CustomMonetaryAmountFormatFactory()));
+        .registerModule(new MoneyModule()
+                .withFormatting(new CustomMonetaryAmountFormatFactory()));
 ```
 
 The default formatting delegates directly to `MonetaryFormats.getAmountFormat(Locale, String...)`.
@@ -127,9 +135,9 @@ writer.writeValueAsString(Money.of(29.95, "EUR"));
 
 ```json
 {
-  "amount": 29.95,
-  "currency": "EUR",
-  "formatted": "29,95 EUR"
+ "amount": 29.95,
+ "currency": "EUR",
+ "formatted": "29,95 EUR"
 }
 ```
 
@@ -142,9 +150,9 @@ writer.writeValueAsString(Money.of(29.95, "USD"));
 
 ```json
 {
-  "amount": 29.95,
-  "currency": "USD",
-  "formatted": "USD29.95"
+ "amount": 29.95,
+ "currency": "USD",
+ "formatted": "USD29.95"
 }
 ```
 
@@ -158,16 +166,16 @@ to the `MoneyModule`:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule()
-        .withMonetaryAmount(new CustomMonetaryAmountFactory()));
+        .registerModule(new MoneyModule()
+                .withMonetaryAmount(new CustomMonetaryAmountFactory()));
 ```
 
 You can also pass in a method reference:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule()
-        .withMonetaryAmount(FastMoney::of));
+        .registerModule(new MoneyModule()
+                .withMonetaryAmount(FastMoney::of));
 ```
 
 *Jackson Datatype Money* comes with support for all `MonetaryAmount` implementations from Moneta, the reference
@@ -184,14 +192,14 @@ Module supports deserialization of amount number from JSON number as well as fro
 ### Custom Field Names
 
 As you have seen in the previous examples the `MoneyModule` uses the field names `amount`, `currency` and `formatted`
- by default. Those names can be overridden if desired:
+by default. Those names can be overridden if desired:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new MoneyModule()
-        .withAmountFieldName("value")
-        .withCurrencyFieldName("unit")
-        .withFormattedFieldName("pretty"));
+        .registerModule(new MoneyModule()
+                .withAmountFieldName("value")
+                .withCurrencyFieldName("unit")
+                .withFormattedFieldName("pretty"));
 ```
 
 ## Usage
@@ -202,8 +210,8 @@ After registering and configuring the module you're now free to directly use `Mo
 import javax.money.MonetaryAmount;
 
 public class Product {
-    private String sku;
-    private MonetaryAmount price;
+ private String sku;
+ private MonetaryAmount price;
     ...
 }
 ```
