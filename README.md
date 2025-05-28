@@ -29,6 +29,9 @@ This project is deprecated and no longer maintained.
 Please use the Jackson Datatype modules for [javax-money](https://github.com/FasterXML/jackson-datatypes-misc/tree/2.x/javax-money) and [moneta](https://github.com/FasterXML/jackson-datatypes-misc/tree/2.x/moneta).
 
 Specifically [MonetaMoneyModule](https://github.com/FasterXML/jackson-datatypes-misc/blob/2.x/moneta/src/main/java/com/fasterxml/jackson/datatype/moneta/MonetaMoneyModule.java) is a drop-in replacement for this module. It supports all the same features and is actively maintained.
+For more fine grain control, you can use the [javax-money](https://github.com/FasterXML/jackson-datatypes-misc/tree/2.x/javax-money) Module, and it's helper classes.
+
+See the [migration guide](MIGRATION.md) for more details on how to migrate from this module to the new one.
 
 
 
