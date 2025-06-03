@@ -7,7 +7,6 @@ import javax.money.format.MonetaryAmountFormat;
 import java.util.Locale;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * @deprecated This module is deprecated. Please use

@@ -5,7 +5,6 @@ import org.apiguardian.api.API;
 import javax.money.MonetaryAmount;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * @deprecated This module is deprecated. Please use

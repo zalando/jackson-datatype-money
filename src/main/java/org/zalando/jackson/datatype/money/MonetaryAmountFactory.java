@@ -4,11 +4,9 @@ import org.apiguardian.api.API;
 
 import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
-
 import java.math.BigDecimal;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * @deprecated This module is deprecated. Please use

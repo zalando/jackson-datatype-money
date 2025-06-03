@@ -17,8 +17,6 @@ import javax.money.MonetaryRounding;
 import javax.money.format.MonetaryFormats;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * @deprecated This module is deprecated. Please use

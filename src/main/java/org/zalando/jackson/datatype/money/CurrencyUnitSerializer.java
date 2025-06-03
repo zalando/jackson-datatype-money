@@ -12,7 +12,6 @@ import javax.money.CurrencyUnit;
 import java.io.IOException;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
  * @deprecated This module is deprecated. Please use

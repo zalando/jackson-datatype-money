@@ -5,7 +5,6 @@ import org.apiguardian.api.API;
 import java.math.BigDecimal;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * @deprecated This module is deprecated. Please use
