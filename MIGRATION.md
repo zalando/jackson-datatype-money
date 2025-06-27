@@ -8,7 +8,6 @@ This document provides guidance on how to migrate from the `zalando/jackson-data
 Replace the dependency in your `pom.xml` or build configuration from:
 
 ```xml
-
 <dependency>
     <groupId>org.zalando</groupId>
     <artifactId>jackson-datatype-money</artifactId>
@@ -19,13 +18,14 @@ Replace the dependency in your `pom.xml` or build configuration from:
 to:
 
 ```xml
-
 <dependency>
     <groupId>com.fasterxml.jackson.datatype</groupId>
     <artifactId>jackson-datatype-moneta</artifactId>
-    <version>2.19.0</version>
+    <version>{{pick-recent}}</version>
 </dependency>
 ```
+
+(This migration guide was validated for the 2.19.0 version of `jackson-datatype-moneta` module)
 
 # Changes in ObjectMapper Configuration
 
