@@ -16,10 +16,13 @@ import javax.money.MonetaryOperator;
 import javax.money.MonetaryRounding;
 import javax.money.format.MonetaryFormats;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
-@API(status = STABLE)
+/**
+ * @deprecated This module is deprecated. Please use
+ * <a href="https://github.com/FasterXML/jackson-datatypes-misc/tree/2.x/moneta">MonetaMoneyModule</a> instead.
+ */
+@API(status = DEPRECATED)
 public final class MoneyModule extends Module {
 
     private final AmountWriter<?> writer;
@@ -89,7 +92,7 @@ public final class MoneyModule extends Module {
         return withNumbers(new QuotedDecimalAmountWriter());
     }
 
-    @API(status = EXPERIMENTAL)
+    @API(status = DEPRECATED)
     public MoneyModule withNumbers(final AmountWriter<?> writer) {
         return new MoneyModule(writer, names, formatFactory, amountFactory,
                 fastMoneyFactory, moneyFactory, roundedMoneyFactory);

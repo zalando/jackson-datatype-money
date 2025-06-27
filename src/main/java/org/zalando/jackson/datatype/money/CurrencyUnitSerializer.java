@@ -11,9 +11,14 @@ import org.apiguardian.api.API;
 import javax.money.CurrencyUnit;
 import java.io.IOException;
 
-import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
-@API(status = MAINTAINED)
+/**
+ * @deprecated This module is deprecated. Please use
+ * <a href="https://github.com/FasterXML/jackson-datatypes-misc/blob/2.x/javax-money/src/main/java/com/fasterxml/jackson/datatype/javax/money/CurrencyUnitSerializer.java">CurrencyUnitSerializer</a> instead.
+ */
+@Deprecated
+@API(status = DEPRECATED)
 public final class CurrencyUnitSerializer extends StdSerializer<CurrencyUnit> {
 
     CurrencyUnitSerializer() {

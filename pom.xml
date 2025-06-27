@@ -222,7 +222,7 @@
                 <version>3.11.0</version>
                 <configuration>
                     <compilerArgs>
-                        <compilerArg>-Xlint:unchecked,deprecation</compilerArg>
+                        <compilerArg>-Xlint:unchecked</compilerArg>
                         <compilerArg>-Werror</compilerArg>
                     </compilerArgs>
                 </configuration>
